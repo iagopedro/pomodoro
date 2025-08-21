@@ -1,0 +1,81 @@
+<!-- 
+  Template do Pomodoro Timer
+  Angular v20 - Aplicação standalone com Signals e Control Flow
+-->
+<div class="pomodoro-container">
+  <!-- Timer Principal -->
+  <div class="timer-card">
+    <h2>🍅 {{ getStateDisplayName() }}</h2>
+    <div class="timer-display">
+      <div class="time-text">{{ formattedTime() }}</div>
+      <div class="progress-bar">
+        <div class="progress" [style.width.%]="progress()"></div>
+      </div>
+    </div>
+    
+    <div class="session-info">
+      <span class="chip">Sessão {{ currentSession() }}</span>
+      <span class="chip accent">{{ totalSessions() }} completas</span>
+    </div>
+    
+    <div class="control-buttons">
+      <!-- Usando @if - novo control flow do Angular v20 -->
+      @if (!isRunning() && currentState() !== TimerState.IDLE) {
+        <button class="btn-fab primary" (click)="startTimer()">▶️</button>
+      } @else if (isRunning()) {
+        <button class="btn-fab warn" (click)="pauseTimer()">⏸️</button>
+      } @else {
+        <button class="btn-fab primary" (click)="startTimer()">▶️</button>
+      }
+      
+      <button class="btn" (click)="resetTimer()">🔄 Reset</button>
+      
+      @if (isRunning()) {
+        <button class="btn" (click)="skipSession()">⏭️ Pular</button>
+      }
+    </div>
+  </div>
+  
+  <!-- Configurações -->
+  <div class="config-card">
+    <h3>⚙️ Configurações</h3>
+    
+    <div class="config-grid">
+      <div class="form-field">
+        <label>Tempo de Trabalho (min)</label>
+        <input type="number" [(ngModel)]="tempWorkTime" min="1" max="60">
+      </div>
+      
+      <div class="form-field">
+        <label>Tempo de Pausa (min)</label>
+        <input type="number" [(ngModel)]="tempBreakTime" min="1" max="30">
+      </div>
+      
+      <div class="form-field">
+        <label>Pausa Longa (min)</label>
+        <input type="number" [(ngModel)]="tempLongBreakTime" min="1" max="60">
+      </div>
+    </div>
+    
+    <button class="btn primary" (click)="updateConfig()" [disabled]="isRunning()">
+      💾 Salvar Configurações
+    </button>
+  </div>
+  
+  <!-- Instruções -->
+  <div class="info-card">
+    <h3>ℹ️ Como funciona?</h3>
+    <ol>
+      <li>Trabalhe focado por {{ config().workTime }} minutos</li>
+      <li>Faça uma pausa de {{ config().breakTime }} minutos</li>
+      <li>Repita por {{ config().workSessions }} sessões</li>
+      <li>Faça uma pausa longa de {{ config().longBreakTime }} minutos</li>
+    </ol>
+    
+    <div class="chips">
+      <span class="chip">🍅 Aumenta foco</span>
+      <span class="chip">⚡ Melhora produtividade</span>
+      <span class="chip">🧘 Reduz fadiga</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<!-- 
+  Template principal da aplicação Pomodoro Timer
+  Angular v20 - Aplicação standalone com componentes modulares
+-->
+<div class="app-container">
+  <header class="app-header">
+    <h1>🍅 {{ title }}</h1>
+    <p>Técnica Pomodoro para aumentar sua produtividade</p>
+  </header>
+  
+  <main class="app-main">
+    <!-- Componente Pomodoro standalone -->
+    <app-pomodoro></app-pomodoro>
+  </main>
+  
+  <footer class="app-footer">
+    <p>Desenvolvido com Angular v20 e Angular Material</p>
+  </footer>
+</div>
+
+<!-- Router outlet para futuras expansões -->
+<router-outlet></router-outlet>

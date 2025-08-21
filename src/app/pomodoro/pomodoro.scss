@@ -1,0 +1,234 @@
+// Estilos para o componente Pomodoro Timer
+// Angular v20 - Template simplificado sem Angular Material
+
+.pomodoro-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Roboto', sans-serif;
+  color: var(--mat-sys-on-surface);
+}
+
+.timer-card, .config-card, .info-card {
+  background: var(--mat-sys-surface-container);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+.timer-card {
+  text-align: center;
+}
+
+.timer-display {
+  margin: 40px 0;
+}
+
+.time-text {
+  font-size: 4rem;
+  font-weight: 300;
+  font-family: 'Roboto Mono', monospace;
+  color: var(--mat-sys-primary);
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--mat-sys-surface-variant);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0 auto;
+  max-width: 400px;
+}
+
+.progress {
+  height: 100%;
+  background: var(--mat-sys-primary);
+  border-radius: 4px;
+  transition: width 1s ease;
+}
+
+.session-info {
+  margin: 20px 0;
+}
+
+.chip {
+  display: inline-block;
+  padding: 8px 16px;
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  border-radius: 16px;
+  margin: 4px;
+  font-size: 0.875rem;
+}
+
+.chip.accent {
+  background: var(--mat-sys-tertiary-container);
+  color: var(--mat-sys-on-tertiary-container);
+}
+
+.control-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.btn-fab {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-fab.primary {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.btn-fab.warn {
+  background: var(--mat-sys-error);
+  color: var(--mat-sys-on-error);
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 24px;
+  background: var(--mat-sys-surface-variant);
+  color: var(--mat-sys-on-surface-variant);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.875rem;
+}
+
+.btn.primary {
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.btn:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.config-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field label {
+  margin-bottom: 8px;
+  color: var(--mat-sys-on-surface-variant);
+  font-weight: 500;
+}
+
+.form-field input {
+  padding: 12px;
+  border: 2px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font-size: 1rem;
+}
+
+.form-field input:focus {
+  border-color: var(--mat-sys-primary);
+  outline: none;
+}
+
+.chips {
+  margin-top: 16px;
+}
+
+ol {
+  text-align: left;
+  line-height: 1.6;
+}
+
+h2, h3 {
+  color: var(--mat-sys-primary);
+  margin-top: 0;
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .pomodoro-container {
+    padding: 16px;
+  }
+  
+  .time-text {
+    font-size: 3rem;
+  }
+  
+  .control-buttons {
+    flex-direction: column;
+  }
+  
+  .config-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .time-text {
+    font-size: 2.5rem;
+  }
+}
+
+// Animações
+@keyframes pulse {
+  0%, 100% { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 0.7; 
+    transform: scale(1.1); 
+  }
+}
+
+// Estados do timer
+.timer-card.working {
+  border-left: 4px solid var(--mat-sys-primary);
+}
+
+.timer-card.break {
+  border-left: 4px solid var(--mat-sys-tertiary);
+}
+
+.timer-card.long-break {
+  border-left: 4px solid var(--mat-sys-secondary);
+}
+
+// Customizações para dark theme
+:host-context(.dark-theme) {
+  .time-text {
+    text-shadow: 0 0 20px rgba(244, 67, 54, 0.3);
+  }
+  
+  .progress {
+    box-shadow: 0 2px 8px rgba(244, 67, 54, 0.2);
+  }
+}
