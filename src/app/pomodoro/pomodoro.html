@@ -20,9 +20,7 @@
     
     <div class="control-buttons">
       <!-- Usando @if - novo control flow do Angular v20 -->
-      @if (!isRunning() && currentState() !== TimerState.IDLE) {
-        <button class="btn-fab primary" (click)="startTimer()">▶️</button>
-      } @else if (isRunning()) {
+      @if (isRunning()) {
         <button class="btn-fab warn" (click)="pauseTimer()">⏸️</button>
       } @else {
         <button class="btn-fab primary" (click)="startTimer()">▶️</button>
