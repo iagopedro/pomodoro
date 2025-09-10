@@ -74,6 +74,8 @@ export class Pomodoro implements OnDestroy {
 
   private timerInterval: any = null;
 
+  private audio: HTMLAudioElement | null = null;
+
   constructor() {
     // Effect - executa quando signals mudam
     effect(() => {
@@ -99,9 +101,15 @@ export class Pomodoro implements OnDestroy {
   public startTimer(): void {
     if (this._currentState() === TimerState.IDLE) {
       this.startWorkSession();
+      this.audio = new Audio('../../assets/sounds/final-round-fight_G_minor.wav');
+      this.audio.load();
+      this.audio.play();
     } else {
       this._isRunning.set(true);
       this.runTimer();
+      this.audio = new Audio('../../assets/sounds/final-round-fight_G_minor.wav');
+      this.audio.load();
+      this.audio.play();
     }
   }
 
