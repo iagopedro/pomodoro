@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Pomodoro as PomodoroComponent } from './pomodoro/pomodoro';
+import { PomodoroComponent } from './pomodoro/pomodoro.component';
 
 @Component({
   selector: 'app-root',
