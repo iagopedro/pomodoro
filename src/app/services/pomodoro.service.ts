@@ -75,6 +75,10 @@ export class PomodoroService {
   // Timer interval privado
   private timerInterval: any = null;
   
+  // Timestamp para cálculo preciso (evita problemas com tab inativa)
+  private startTime: number = 0;
+  private pausedTime: number = 0;
+  
   // Audio para notificações
   private audio: HTMLAudioElement | null = null;
   private readonly audioSrc = 'assets/sounds/pomodoro-bell.wav';
@@ -113,6 +117,9 @@ export class PomodoroService {
     if (this._currentState() === TimerState.IDLE) {
       this.startWorkSession();
     } else {
+      // Retomar de onde parou
+      this.startTime = Date.now();
+      this.pausedTime = this._remainingTime();
       this._isRunning.set(true);
       this.runTimer();
     }
@@ -166,7 +173,10 @@ export class PomodoroService {
 
   private startWorkSession(): void {
     this._currentState.set(TimerState.WORKING);
-    this._remainingTime.set(this._config().workTime * 60);
+    const totalTime = this._config().workTime * 60;
+    this._remainingTime.set(totalTime);
+    this.startTime = Date.now();
+    this.pausedTime = totalTime;
     this._isRunning.set(true);
     this.runTimer();
   }
@@ -174,14 +184,18 @@ export class PomodoroService {
   private startBreak(): void {
     const isLongBreak = this._totalSessions() % this._config().workSessions === 0;
     
+    let totalTime: number;
     if (isLongBreak) {
       this._currentState.set(TimerState.LONG_BREAK);
-      this._remainingTime.set(this._config().longBreakTime * 60);
+      totalTime = this._config().longBreakTime * 60;
     } else {
       this._currentState.set(TimerState.BREAK);
-      this._remainingTime.set(this._config().breakTime * 60);
+      totalTime = this._config().breakTime * 60;
     }
     
+    this._remainingTime.set(totalTime);
+    this.startTime = Date.now();
+    this.pausedTime = totalTime;
     this._isRunning.set(true);
     this.runTimer();
   }
@@ -189,13 +203,18 @@ export class PomodoroService {
   private runTimer(): void {
     this.clearTimer();
     
+    // Usar timestamp real ao invés de confiar apenas no setInterval
+    // Isso evita problemas quando a aba fica inativa/minimizada
     this.timerInterval = setInterval(() => {
-      if (this._remainingTime() > 0) {
-        this._remainingTime.update(time => time - 1);
-      } else {
+      const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+      const remaining = Math.max(0, this.pausedTime - elapsed);
+      
+      this._remainingTime.set(remaining);
+      
+      if (remaining <= 0) {
         this.nextSession();
       }
-    }, 1000);
+    }, 100); // Verificar a cada 100ms para UI mais responsiva
   }
 
   private nextSession(): void {
