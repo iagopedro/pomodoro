@@ -79,22 +79,18 @@ export class PomodoroService {
   private startTime: number = 0;
   private pausedTime: number = 0;
   
-  // Audio para notificações
+  // Áudios temáticos do Pomodoro
   private audio: HTMLAudioElement | null = null;
-  private readonly audioSrc = 'assets/sounds/pomodoro-bell.wav';
+  private readonly audioFight = 'assets/sounds/mortal-kombat-fight.mp3';  // Início (Mortal Kombat)
+  private readonly audioWin = 'assets/sounds/street-fighter-you-win.mp3'; // Final (Street Fighter)
 
   constructor() {
-    // Effect - Monitora mudanças de estado para logs e notificações
+    // Effect - Monitora mudanças de estado para logs
     effect(() => {
       const state = this._currentState();
       const time = this._remainingTime();
       
       console.log(`[PomodoroService] Estado: ${state}, Tempo: ${time}s`);
-      
-      // Notificação quando sessão termina
-      if (time === 0 && state !== TimerState.IDLE) {
-        this.playNotificationSound();
-      }
     });
   }
 
@@ -124,8 +120,8 @@ export class PomodoroService {
       this.runTimer();
     }
     
-    // Tocar som de início
-    this.playNotificationSound();
+    // 🎮 Mortal Kombat: FIGHT!
+    this.playFightSound();
   }
 
   public pauseTimer(): void {
@@ -158,17 +154,28 @@ export class PomodoroService {
 
   // Métodos privados - Lógica interna do serviço
   
-  private playNotificationSound(): void {
+  private playSound(audioSrc: string): void {
     try {
       this.audio?.pause();
-      this.audio = new Audio(this.audioSrc);
+      this.audio = new Audio(audioSrc);
       this.audio.currentTime = 0;
+      this.audio.volume = 1; // Volume a 100%
       this.audio.play().catch(err => {
         console.warn('[PomodoroService] Audio bloqueado ou falhou:', err);
       });
     } catch (e) {
       console.error('[PomodoroService] Erro no áudio:', e);
     }
+  }
+  
+  private playFightSound(): void {
+    console.log('🎮 Mortal Kombat: FIGHT!');
+    this.playSound(this.audioFight);
+  }
+  
+  private playWinSound(): void {
+    console.log('🎮 Street Fighter: YOU WIN!');
+    this.playSound(this.audioWin);
   }
 
   private startWorkSession(): void {
@@ -179,6 +186,9 @@ export class PomodoroService {
     this.pausedTime = totalTime;
     this._isRunning.set(true);
     this.runTimer();
+    
+    // 🎮 Mortal Kombat: FIGHT! (início de trabalho)
+    this.playFightSound();
   }
 
   private startBreak(): void {
@@ -212,6 +222,8 @@ export class PomodoroService {
       this._remainingTime.set(remaining);
       
       if (remaining <= 0) {
+        // 🎮 Street Fighter: YOU WIN! (fim da sessão)
+        this.playWinSound();
         this.nextSession();
       }
     }, 100); // Verificar a cada 100ms para UI mais responsiva

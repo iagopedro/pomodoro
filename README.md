@@ -1,8 +1,44 @@
-# PomodoroApp
+# 🍅 Pomodoro Timer - Angular v20
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.6.
+Aplicação de Pomodoro Timer moderna desenvolvida com Angular v20, utilizando os mais recentes recursos da framework.
 
-## Development server
+## ✨ Funcionalidades
+
+- ⏱️ **Timer Pomodoro Completo**: 25min trabalho, 5min pausa, 15min pausa longa
+- 🎮 **Áudios Temáticos**: Sons do Mortal Kombat ("FIGHT!") e Street Fighter ("YOU WIN!")
+- 🎨 **Interface Moderna**: Design responsivo com Material Design 3 (Dark Mode)
+- 📱 **Responsivo**: Funciona perfeitamente em desktop e mobile
+- 🔔 **Notificações Sonoras**: Sons distintos para início e fim de sessões
+- ⚡ **Performance Otimizada**: Timer preciso mesmo com aba minimizada/inativa
+
+## 🚀 Tecnologias Angular v20
+
+Este projeto demonstra os conceitos mais modernos do Angular:
+
+- ✅ **Standalone Components**: Sem módulos, arquitetura simplificada
+- ✅ **Signals**: Gerenciamento de estado reativo e performático
+- ✅ **inject() API**: Nova forma de injeção de dependências
+- ✅ **Control Flow**: Sintaxe @if/@else no template
+- ✅ **Computed Signals**: Valores derivados automaticamente
+- ✅ **Effects**: Reações a mudanças de estado
+- ✅ **Tree-Shaking Otimizado**: Bundle menor e mais eficiente
+
+## 🎮 Sistema de Áudios
+
+A aplicação usa sons icônicos de jogos de luta:
+
+- **Início de Sessão**: "FIGHT!" do Mortal Kombat 🥊
+- **Fim de Sessão**: "YOU WIN!" do Street Fighter 🏆
+
+### Configurar Áudios
+
+Baixe os arquivos de áudio e coloque em `src/assets/sounds/`:
+- `mortal-kombat-fight.mp3`
+- `street-fighter-you-win.mp3`
+
+Consulte `AUDIO_SETUP.md` para instruções detalhadas sobre onde encontrar os áudios.
+
+## 🛠️ Development server
 
 To start a local development server, run:
 
