@@ -154,12 +154,12 @@ export class PomodoroService {
 
   // Métodos privados - Lógica interna do serviço
   
-  private playSound(audioSrc: string): void {
+  private playSound(audioSrc: string, volume: number): void {
     try {
       this.audio?.pause();
       this.audio = new Audio(audioSrc);
       this.audio.currentTime = 0;
-      this.audio.volume = 1; // Volume a 100%
+      this.audio.volume = volume; // Volume a 100%
       this.audio.play().catch(err => {
         console.warn('[PomodoroService] Audio bloqueado ou falhou:', err);
       });
@@ -170,12 +170,12 @@ export class PomodoroService {
   
   private playFightSound(): void {
     console.log('🎮 Mortal Kombat: FIGHT!');
-    this.playSound(this.audioFight);
+    this.playSound(this.audioFight, 1.0);
   }
   
   private playWinSound(): void {
     console.log('🎮 Street Fighter: YOU WIN!');
-    this.playSound(this.audioWin);
+    this.playSound(this.audioWin, 0.7);
   }
 
   private startWorkSession(): void {
