@@ -65,41 +65,31 @@
 }
 
 .cards-row {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 5rem;
+  display: flex;
+  gap: 1.5rem;
   align-items: center;
   justify-content: center;
   flex: 1;
   min-height: 0;
-  transition: grid-template-columns 0.3s ease;
-  justify-items: center;
   width: 100%;
+  max-width: 1600px;
   margin: 0 auto;
   
   &.config-visible {
-    grid-template-columns: 2fr 1fr;
-    justify-items: stretch;
     align-items: start;
   }
   
   @media (max-width: 1200px) {
     gap: 20px;
-    
-    &.config-visible {
-      grid-template-columns: 2fr 1fr;
-    }
   }
   
   @media (max-width: 900px) {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     gap: 20px;
     align-items: start;
-    justify-items: center;
     
     &.config-visible {
-      grid-template-columns: 1fr;
-      justify-items: center;
+      align-items: center;
     }
   }
 }
@@ -115,18 +105,66 @@
   min-height: 0;
   overflow-y: auto;
   animation: slideInRight 0.3s ease;
-  width: 100%;
-  max-width: 100%;
+  width: 300px;
+  max-width: 300px;
+  flex-shrink: 0;
+  position: relative;
+  
+  @media (max-width: 1200px) {
+    width: 260px;
+    max-width: 260px;
+  }
   
   @media (max-width: 900px) {
     padding: 20px;
     height: auto;
     overflow-y: visible;
     animation: slideInDown 0.3s ease;
+    width: 100%;
+    max-width: 100%;
   }
   
   @media (max-width: 768px) {
     padding: 16px;
+  }
+}
+
+.btn-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--mat-sys-surface-variant);
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+  line-height: 1;
+  padding: 0;
+  
+  &:hover {
+    background: var(--mat-sys-error-container);
+    color: var(--mat-sys-on-error-container);
+    transform: rotate(90deg);
+  }
+  
+  &:active {
+    transform: rotate(90deg) scale(0.95);
+  }
+  
+  @media (max-width: 768px) {
+    width: 32px;
+    height: 32px;
+    font-size: 1.25rem;
+    top: 12px;
+    right: 12px;
   }
 }
 
@@ -163,23 +201,24 @@
   min-height: 0;
   overflow-y: auto;
   text-align: center;
-  width: 100%;
-  max-width: 900px;
+  width: 750px;
+  flex-shrink: 0;
+  flex-grow: 0;
   
-  .cards-row.config-visible & {
-    max-width: none;
+  @media (max-width: 1200px) {
+    width: 650px;
   }
   
   @media (max-width: 900px) {
     padding: 20px;
     height: auto;
     overflow-y: visible;
+    width: 100%;
     max-width: 100%;
   }
   
   @media (max-width: 768px) {
     padding: 16px;
-    max-width: 100%;
   }
 }
 

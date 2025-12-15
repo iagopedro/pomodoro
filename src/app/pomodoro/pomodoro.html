@@ -31,14 +31,14 @@
           <button class="btn-fab primary" (click)="startTimer()">▶️</button>
         }
         
-        <button class="btn" (click)="resetTimer()">🔄 Reset</button>
+        <button class="btn" (click)="resetTimer()">🔄</button>
         
         @if (isRunning()) {
-          <button class="btn" (click)="skipSession()">⏭️ Pular</button>
+          <button class="btn" (click)="skipSession()">⏭️</button>
         }
         
-        <button class="btn" (click)="toggleConfig()">
-          ⚙️ {{ showConfig() ? 'Fechar' : 'Configurações' }}
+        <button class="btn" (click)="toggleConfig()" [disabled]="showConfig()">
+          ⚙️
         </button>
       </div>
     </div>
@@ -46,6 +46,7 @@
     <!-- Configurações -->
     @if (showConfig()) {
       <div class="config-card">
+      <button class="btn-close" (click)="toggleConfig()" title="Fechar configurações">✕</button>
       <h3>⚙️ Configurações</h3>
       
       <div class="config-grid">
