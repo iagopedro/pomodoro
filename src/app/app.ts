@@ -12,6 +12,4 @@ import { PomodoroComponent } from './pomodoro/pomodoro.component';
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
-export class App {
-  title = 'Pomodoro Timer';
-}
+export class App { }

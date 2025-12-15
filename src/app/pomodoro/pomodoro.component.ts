@@ -47,6 +47,8 @@ export class PomodoroComponent implements OnDestroy {
   public tempBreakTime = this.config().breakTime;
   public tempLongBreakTime = this.config().longBreakTime;
 
+  title = 'Pomodoro Timer';
+
   ngOnDestroy(): void {
     // Cleanup é feito pelo serviço (singleton)
     console.log('[PomodoroComponent] Component destroyed');

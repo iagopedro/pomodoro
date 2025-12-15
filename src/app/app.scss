@@ -9,42 +9,6 @@
   flex-direction: column;
 }
 
-.app-header {
-  background: var(--mat-sys-surface-container-highest);
-  padding: 8px;
-  text-align: center;
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  
-  h1 {
-    margin: 0;
-    font-size: 1.3rem;
-    font-weight: 400;
-    color: var(--mat-sys-primary);
-    font-family: 'Roboto', sans-serif;
-    
-    // Responsividade
-    @media (max-width: 768px) {
-      font-size: 2rem;
-    }
-    
-    @media (max-width: 480px) {
-      font-size: 1.8rem;
-    }
-  }
-  
-  p {
-    margin: 8px 0 0 0;
-    font-size: 1.1rem;
-    color: var(--mat-sys-on-surface-variant);
-    font-weight: 300;
-    
-    @media (max-width: 480px) {
-      font-size: 1rem;
-    }
-  }
-}
-
 .app-main {
   flex: 1;
   display: flex;

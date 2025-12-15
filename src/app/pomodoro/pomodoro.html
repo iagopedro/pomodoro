@@ -7,11 +7,14 @@
   <div class="cards-row">
     <!-- Timer Principal -->
     <div class="timer-card">
-      <h2>🍅 {{ getStateDisplayName() }}</h2>
-      <div class="timer-display">
-        <div class="time-text">{{ formattedTime() }}</div>
-        <div class="progress-bar">
-          <div class="progress" [style.width.%]="progress()"></div>
+      <h1>🍅 {{ title }}</h1>
+      <div class="timer-info">
+        <h2>{{ getStateDisplayName() }}</h2>
+        <div class="timer-display">
+          <div class="time-text">{{ formattedTime() }}</div>
+          <div class="progress-bar">
+            <div class="progress" [style.width.%]="progress()"></div>
+          </div>
         </div>
       </div>
       
