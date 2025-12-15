@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PomodoroService, TimerState } from '../services/pomodoro.service';
@@ -47,6 +47,9 @@ export class PomodoroComponent implements OnDestroy {
   public tempBreakTime = this.config().breakTime;
   public tempLongBreakTime = this.config().longBreakTime;
 
+  // Controle de visibilidade das configurações
+  public readonly showConfig = signal(false);
+
   title = 'Pomodoro Timer';
 
   ngOnDestroy(): void {
@@ -91,5 +94,9 @@ export class PomodoroComponent implements OnDestroy {
 
   public getStateDisplayName(): string {
     return this.pomodoroService.getStateDisplayName();
+  }
+
+  public toggleConfig(): void {
+    this.showConfig.set(!this.showConfig());
   }
 }

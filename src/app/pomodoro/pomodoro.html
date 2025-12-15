@@ -4,7 +4,7 @@
 -->
 <div class="pomodoro-container">
   <!-- Cards alinhados horizontalmente -->
-  <div class="cards-row">
+  <div class="cards-row" [class.config-visible]="showConfig()">
     <!-- Timer Principal -->
     <div class="timer-card">
       <h1>🍅 {{ title }}</h1>
@@ -36,11 +36,16 @@
         @if (isRunning()) {
           <button class="btn" (click)="skipSession()">⏭️ Pular</button>
         }
+        
+        <button class="btn" (click)="toggleConfig()">
+          ⚙️ {{ showConfig() ? 'Fechar' : 'Configurações' }}
+        </button>
       </div>
     </div>
     
     <!-- Configurações -->
-    <div class="config-card">
+    @if (showConfig()) {
+      <div class="config-card">
       <h3>⚙️ Configurações</h3>
       
       <div class="config-grid">
@@ -63,6 +68,7 @@
       <button class="btn primary" (click)="updateConfig()" [disabled]="isRunning()">
         💾 Salvar Configurações
       </button>
-    </div>
+      </div>
+    }
   </div>
 </div>
