@@ -3,60 +3,63 @@
   Angular v20 - Aplicação standalone com Signals e Control Flow
 -->
 <div class="pomodoro-container">
-  <!-- Timer Principal -->
-  <div class="timer-card">
-    <h2>🍅 {{ getStateDisplayName() }}</h2>
-    <div class="timer-display">
-      <div class="time-text">{{ formattedTime() }}</div>
-      <div class="progress-bar">
-        <div class="progress" [style.width.%]="progress()"></div>
+  <!-- Cards alinhados horizontalmente -->
+  <div class="cards-row">
+    <!-- Timer Principal -->
+    <div class="timer-card">
+      <h2>🍅 {{ getStateDisplayName() }}</h2>
+      <div class="timer-display">
+        <div class="time-text">{{ formattedTime() }}</div>
+        <div class="progress-bar">
+          <div class="progress" [style.width.%]="progress()"></div>
+        </div>
+      </div>
+      
+      <div class="session-info">
+        <span class="chip">Sessão {{ currentSession() }}</span>
+        <span class="chip accent">{{ totalSessions() }} completas</span>
+      </div>
+      
+      <div class="control-buttons">
+        <!-- Usando @if - novo control flow do Angular v20 -->
+        @if (isRunning()) {
+          <button class="btn-fab warn" (click)="pauseTimer()">⏸️</button>
+        } @else {
+          <button class="btn-fab primary" (click)="startTimer()">▶️</button>
+        }
+        
+        <button class="btn" (click)="resetTimer()">🔄 Reset</button>
+        
+        @if (isRunning()) {
+          <button class="btn" (click)="skipSession()">⏭️ Pular</button>
+        }
       </div>
     </div>
     
-    <div class="session-info">
-      <span class="chip">Sessão {{ currentSession() }}</span>
-      <span class="chip accent">{{ totalSessions() }} completas</span>
-    </div>
-    
-    <div class="control-buttons">
-      <!-- Usando @if - novo control flow do Angular v20 -->
-      @if (isRunning()) {
-        <button class="btn-fab warn" (click)="pauseTimer()">⏸️</button>
-      } @else {
-        <button class="btn-fab primary" (click)="startTimer()">▶️</button>
-      }
+    <!-- Configurações -->
+    <div class="config-card">
+      <h3>⚙️ Configurações</h3>
       
-      <button class="btn" (click)="resetTimer()">🔄 Reset</button>
-      
-      @if (isRunning()) {
-        <button class="btn" (click)="skipSession()">⏭️ Pular</button>
-      }
-    </div>
-  </div>
-  
-  <!-- Configurações -->
-  <div class="config-card">
-    <h3>⚙️ Configurações</h3>
-    
-    <div class="config-grid">
-      <div class="form-field">
-        <label>Tempo de Trabalho (min)</label>
-        <input type="number" [(ngModel)]="tempWorkTime" min="1" max="60">
+      <div class="config-grid">
+        <div class="form-field">
+          <label>Tempo de Trabalho (min)</label>
+          <input type="number" [(ngModel)]="tempWorkTime" min="1" max="60">
+        </div>
+        
+        <div class="form-field">
+          <label>Tempo de Pausa (min)</label>
+          <input type="number" [(ngModel)]="tempBreakTime" min="1" max="30">
+        </div>
+        
+        <div class="form-field">
+          <label>Pausa Longa (min)</label>
+          <input type="number" [(ngModel)]="tempLongBreakTime" min="1" max="60">
+        </div>
       </div>
       
-      <div class="form-field">
-        <label>Tempo de Pausa (min)</label>
-        <input type="number" [(ngModel)]="tempBreakTime" min="1" max="30">
-      </div>
-      
-      <div class="form-field">
-        <label>Pausa Longa (min)</label>
-        <input type="number" [(ngModel)]="tempLongBreakTime" min="1" max="60">
-      </div>
+      <button class="btn primary" (click)="updateConfig()" [disabled]="isRunning()">
+        💾 Salvar Configurações
+      </button>
     </div>
-    
-    <button class="btn primary" (click)="updateConfig()" [disabled]="isRunning()">
-      💾 Salvar Configurações
-    </button>
   </div>
 </div>

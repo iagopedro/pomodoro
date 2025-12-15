@@ -11,14 +11,14 @@
 
 .app-header {
   background: var(--mat-sys-surface-container-highest);
-  padding: 24px;
+  padding: 8px;
   text-align: center;
   border-bottom: 1px solid var(--mat-sys-outline-variant);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   
   h1 {
     margin: 0;
-    font-size: 2.5rem;
+    font-size: 1.3rem;
     font-weight: 400;
     color: var(--mat-sys-primary);
     font-family: 'Roboto', sans-serif;
@@ -50,8 +50,15 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 0;
+  padding: 16px 0;
   background: var(--mat-sys-surface);
+  width: 100%;
+  overflow: hidden;
+  min-height: 0;
+  
+  @media (max-width: 768px) {
+    padding: 12px 0;
+  }
 }
 
 .app-footer {
