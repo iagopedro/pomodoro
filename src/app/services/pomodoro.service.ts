@@ -112,6 +112,7 @@ export class PomodoroService {
   public startTimer(): void {
     if (this._currentState() === TimerState.IDLE) {
       this.startWorkSession();
+      this.playFightSound();
     } else {
       // Retomar de onde parou
       this.startTime = Date.now();
@@ -119,9 +120,6 @@ export class PomodoroService {
       this._isRunning.set(true);
       this.runTimer();
     }
-    
-    // 🎮 Mortal Kombat: FIGHT!
-    this.playFightSound();
   }
 
   public pauseTimer(): void {
