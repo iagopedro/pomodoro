@@ -221,14 +221,21 @@
     max-height: calc(100vh - 40px);
   }
   
+  @media (max-width: 1024px) {
+    width: 90vw;
+    max-width: 700px;
+    padding: 20px;
+    gap: 1rem;
+  }
+  
   @media (max-width: 900px) {
-    padding: 16px;
+    padding: 18px;
     height: auto;
     max-height: calc(100vh - 40px);
     overflow-y: visible;
-    width: 100%;
-    max-width: 100%;
-    gap: 0;
+    width: 90vw;
+    max-width: 600px;
+    gap: 0.5rem;
     box-sizing: border-box;
   }
   
@@ -237,9 +244,8 @@
     max-height: calc(100vh - 32px);
     gap: 0;
     box-sizing: border-box;
-    width: calc(100vw - 40px);
-    // min-width: calc(100vw - 16px);
-    // max-width: calc(100vw - 16px);
+    width: calc(100vw - 60px);
+    max-width: calc(100vw - 60px);
     margin: 0 auto;
   }
 }
@@ -250,6 +256,15 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  
+  @media (max-width: 1024px) {
+    height: 76px;
+  }
+  
+  @media (max-width: 900px) {
+    height: 72px;
+    margin-bottom: 16px;
+  }
   
   @media (max-width: 768px) {
     height: 64px;
@@ -268,9 +283,14 @@
   padding: 0;
   min-height: 0;
   
+  @media (max-width: 1024px) {
+    gap: 40px;
+  }
+  
   @media (max-width: 900px) {
     padding: 0;
-    gap: 28px;
+    gap: 32px;
+    margin: 2rem 0;
   }
   
   @media (max-width: 768px) {
@@ -295,6 +315,14 @@
   width: 100%;
   flex-shrink: 0;
   
+  @media (max-width: 1024px) {
+    gap: 44px;
+  }
+  
+  @media (max-width: 900px) {
+    gap: 36px;
+  }
+  
   @media (max-width: 768px) {
     gap: 28px;
   }
@@ -317,9 +345,14 @@
     font-size: 6rem;
   }
   
+  @media (max-width: 1024px) {
+    font-size: 5rem;
+    letter-spacing: 5px;
+  }
+  
   @media (max-width: 900px) {
-    font-size: 3.5rem;
-    letter-spacing: 3px;
+    font-size: 4.5rem;
+    letter-spacing: 4px;
   }
   
   @media (max-width: 768px) {
@@ -360,6 +393,15 @@
   justify-content: flex-end;
   width: 100%;
   overflow: hidden;
+  
+  @media (max-width: 1024px) {
+    height: 150px;
+  }
+  
+  @media (max-width: 900px) {
+    gap: 14px;
+    height: 140px;
+  }
   
   @media (max-width: 768px) {
     gap: 12px;
@@ -412,6 +454,16 @@
   min-width: 400px;
   margin-left: auto;
   margin-right: auto;
+  
+  @media (max-width: 1024px) {
+    gap: 14px;
+    min-width: 380px;
+  }
+  
+  @media (max-width: 900px) {
+    gap: 12px;
+    min-width: 100%;
+  }
   
   @media (max-width: 768px) {
     gap: 8px;
