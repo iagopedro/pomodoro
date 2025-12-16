@@ -18,28 +18,30 @@
         </div>
       </div>
       
-      <div class="session-info">
-        <span class="chip">Sessão {{ currentSession() }}</span>
-        <span class="chip accent">{{ totalSessions() }} completas</span>
-      </div>
-      
-      <div class="control-buttons">
-        <!-- Usando @if - novo control flow do Angular v20 -->
-        @if (isRunning()) {
-          <button class="btn-fab warn" (click)="pauseTimer()">⏸️</button>
-        } @else {
-          <button class="btn-fab primary" (click)="startTimer()">▶️</button>
-        }
+      <div class="bottom-section">
+        <div class="session-info">
+          <span class="chip">Sessão {{ currentSession() }}</span>
+          <span class="chip accent">{{ totalSessions() }} completas</span>
+        </div>
         
-        <button class="btn" (click)="resetTimer()">🔄</button>
-        
-        @if (isRunning()) {
-          <button class="btn" (click)="skipSession()">⏭️</button>
-        }
-        
-        <button class="btn" (click)="toggleConfig()" [disabled]="showConfig()">
-          ⚙️
-        </button>
+        <div class="control-buttons">
+          <!-- Usando @if - novo control flow do Angular v20 -->
+          @if (isRunning()) {
+            <button class="btn-fab warn" (click)="pauseTimer()">⏸️</button>
+          } @else {
+            <button class="btn-fab primary" (click)="startTimer()">▶️</button>
+          }
+          
+          <button class="btn" (click)="resetTimer()">🔄</button>
+          
+          @if (isRunning()) {
+            <button class="btn" (click)="skipSession()">⏭️</button>
+          }
+          
+          <button class="btn" (click)="toggleConfig()" [disabled]="showConfig()">
+            ⚙️
+          </button>
+        </div>
       </div>
     </div>
     
