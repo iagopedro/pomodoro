@@ -139,7 +139,7 @@ export class PomodoroService {
     this._isRunning.set(false);
     this._currentState.set(TimerState.IDLE);
     this._currentSession.set(1);
-    this._remainingTime.set(0);
+    this._remainingTime.set(this._config().workTime * 60);
   }
 
   public skipSession(): void {

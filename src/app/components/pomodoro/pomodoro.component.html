@@ -49,30 +49,30 @@
     
     <!-- Configurações -->
     @if (showConfig()) {
-      <div class="config-card">
-      <button class="btn-close" (click)="toggleConfig()" title="Fechar configurações">✕</button>
-      <h3>⚙️ Configurações</h3>
-      
-      <div class="config-grid">
-        <div class="form-field">
-          <label>Tempo de Trabalho (min)</label>
-          <input type="number" [(ngModel)]="tempWorkTime" min="1" max="60">
+      <div class="config-card" [class.closing]="isClosing()">
+        <button class="btn-close" (click)="toggleConfig()" title="Fechar configurações">✕</button>
+        <h3>⚙️ Configurações</h3>
+        
+        <div class="config-grid">
+          <div class="form-field">
+            <label>Tempo de Trabalho (min)</label>
+            <input type="number" [(ngModel)]="tempWorkTime" min="1" max="60">
+          </div>
+          
+          <div class="form-field">
+            <label>Tempo de Pausa (min)</label>
+            <input type="number" [(ngModel)]="tempBreakTime" min="1" max="30">
+          </div>
+          
+          <div class="form-field">
+            <label>Pausa Longa (min)</label>
+            <input type="number" [(ngModel)]="tempLongBreakTime" min="1" max="60">
+          </div>
         </div>
         
-        <div class="form-field">
-          <label>Tempo de Pausa (min)</label>
-          <input type="number" [(ngModel)]="tempBreakTime" min="1" max="30">
-        </div>
-        
-        <div class="form-field">
-          <label>Pausa Longa (min)</label>
-          <input type="number" [(ngModel)]="tempLongBreakTime" min="1" max="60">
-        </div>
-      </div>
-      
-      <button class="btn primary" (click)="updateConfig()" [disabled]="isRunning()">
-        💾 Salvar Configurações
-      </button>
+        <button class="btn primary" (click)="updateConfig()" [disabled]="isRunning()">
+          💾 Salvar Configurações
+        </button>
       </div>
     }
   </div>

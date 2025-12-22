@@ -49,6 +49,7 @@ export class PomodoroComponent implements OnDestroy {
 
   // Controle de visibilidade das configurações
   public readonly showConfig = signal(false);
+  public readonly isClosing = signal(false);
 
   title = 'Pomodoro Timer';
 
@@ -99,6 +100,17 @@ export class PomodoroComponent implements OnDestroy {
   }
 
   public toggleConfig(): void {
-    this.showConfig.set(!this.showConfig());
+    if (this.showConfig()) {
+      // Ativar animação de fechamento
+      this.isClosing.set(true);
+      
+      // Aguardar animação terminar antes de ocultar
+      setTimeout(() => {
+        this.showConfig.set(false);
+        this.isClosing.set(false);
+      }, 300); // Duração da animação
+    } else {
+      this.showConfig.set(true);
+    }
   }
 }
