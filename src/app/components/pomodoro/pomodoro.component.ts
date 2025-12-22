@@ -66,6 +66,8 @@ export class PomodoroComponent implements OnDestroy {
         breakTime: this.tempBreakTime,
         longBreakTime: this.tempLongBreakTime
       });
+
+      this.toggleConfig();
     } catch (error) {
       console.error('Erro ao atualizar configuração:', error);
       alert('Configuração inválida: ' + (error as Error).message);
