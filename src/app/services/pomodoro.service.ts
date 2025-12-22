@@ -47,7 +47,7 @@ export class PomodoroService {
   // Signals privados para controle interno do estado
   private _config = signal<PomodoroConfig>(this.defaultConfig);
   private _currentState = signal<TimerState>(TimerState.IDLE);
-  private _remainingTime = signal<number>(0);
+  private _remainingTime = signal<number>(this._config().workTime * 60);
   private _currentSession = signal<number>(1);
   private _totalSessions = signal<number>(0);
   private _isRunning = signal<boolean>(false);
