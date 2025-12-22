@@ -280,7 +280,9 @@ export class PomodoroService {
     dialogRef.afterClosed().subscribe(() => {
       console.log('[PomodoroService] Exercise completed! User can now start break manually.');
       // Timer permanece zerado e parado - usuário deve iniciar a pausa manualmente
+      this.startBreak();
     });
+
   }
 
   private getTotalTimeForCurrentState(): number {
