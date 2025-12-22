@@ -37,3 +37,11 @@ body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Estilos globais para o modal de exercícios */
+.exercise-modal-panel {
+  .mat-mdc-dialog-container {
+    border-radius: 12px;
+    padding: 0;
+  }
+}

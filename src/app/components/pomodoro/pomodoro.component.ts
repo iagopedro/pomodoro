@@ -1,7 +1,7 @@
 import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PomodoroService, TimerState } from '../services/pomodoro.service';
+import { PomodoroService, TimerState } from '../../services/pomodoro.service';
 
 /**
  * Componente Pomodoro - Angular v20 com Standalone Components
@@ -20,8 +20,8 @@ import { PomodoroService, TimerState } from '../services/pomodoro.service';
   selector: 'app-pomodoro',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './pomodoro.html',
-  styleUrl: './pomodoro.scss'
+  templateUrl: './pomodoro.component.html',
+  styleUrl: './pomodoro.component.scss'
 })
 export class PomodoroComponent implements OnDestroy {
   

@@ -1,4 +1,7 @@
-import { Injectable, signal, computed, effect } from '@angular/core';
+import { Injectable, signal, computed, effect, inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ExerciseService } from './exercise.service';
+import { ExerciseModalComponent } from '../components/exercise-modal/exercise-modal.component';
 
 // Interfaces do serviço Pomodoro
 export enum TimerState {
@@ -83,6 +86,10 @@ export class PomodoroService {
   private audio: HTMLAudioElement | null = null;
   private readonly audioFight = 'assets/sounds/mortal-kombat-fight.mp3';  // Início (Mortal Kombat)
   private readonly audioWin = 'assets/sounds/street-fighter-you-win.mp3'; // Final (Street Fighter)
+
+  // Angular v20 - inject() API para serviços
+  private readonly dialog = inject(MatDialog);
+  private readonly exerciseService = inject(ExerciseService);
 
   constructor() {
     // Effect - Monitora mudanças de estado para logs
@@ -233,9 +240,15 @@ export class PomodoroService {
     const currentState = this._currentState();
     
     if (currentState === TimerState.WORKING) {
+      // Final de sessão de trabalho - mostrar modal de exercício
       this._totalSessions.update(total => total + 1);
-      this.startBreak();
+      this._isRunning.set(false);
+      this._remainingTime.set(0); // Zera o timer
+      
+      // Abrir modal com exercício
+      this.openExerciseModal();
     } else {
+      // Final de pausa - iniciar próxima sessão de trabalho
       this._currentSession.update(session => session + 1);
       this.startWorkSession();
     }
@@ -246,6 +259,28 @@ export class PomodoroService {
       clearInterval(this.timerInterval);
       this.timerInterval = null;
     }
+  }
+
+  /**
+   * Abre o modal de exercício ao final de cada sessão de trabalho
+   * O modal só fecha quando o usuário clicar em "Feito!"
+   * Após fechar, o usuário deve iniciar manualmente a pausa
+   */
+  private openExerciseModal(): void {
+    const exercise = this.exerciseService.getRandomExercise();
+    
+    const dialogRef = this.dialog.open(ExerciseModalComponent, {
+      data: exercise,
+      disableClose: true, // Não permite fechar clicando fora ou ESC
+      width: '600px',
+      maxWidth: '90vw',
+      panelClass: 'exercise-modal-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      console.log('[PomodoroService] Exercise completed! User can now start break manually.');
+      // Timer permanece zerado e parado - usuário deve iniciar a pausa manualmente
+    });
   }
 
   private getTotalTimeForCurrentState(): number {

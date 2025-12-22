@@ -1,0 +1,36 @@
+<div class="exercise-modal">
+  <h2 mat-dialog-title class="modal-title">
+    <mat-icon>fitness_center</mat-icon>
+    Hora do Exercício!
+  </h2>
+  
+  <mat-dialog-content class="modal-content">
+    <div class="exercise-info">
+      <h3 class="exercise-name">{{ exercise.name }}</h3>
+      <p class="exercise-duration">
+        <mat-icon>schedule</mat-icon>
+        Duração: {{ exercise.duration }} segundo{{ exercise.duration !== 1 ? 's' : '' }}
+      </p>
+    </div>
+    
+    <div class="exercise-instructions">
+      <p>{{ exercise.instructions }}</p>
+    </div>
+    
+    <div class="exercise-tip">
+      <mat-icon>info</mat-icon>
+      <span>Execute o exercício com calma e atenção. Não force movimentos que causem dor.</span>
+    </div>
+  </mat-dialog-content>
+  
+  <mat-dialog-actions align="end">
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="onDone()"
+      class="done-button">
+      <mat-icon>check_circle</mat-icon>
+      Feito!
+    </button>
+  </mat-dialog-actions>
+</div>
