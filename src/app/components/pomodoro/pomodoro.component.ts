@@ -77,6 +77,7 @@ export class PomodoroComponent implements OnDestroy {
 
   public startTimer(): void {
     this.pomodoroService.startTimer();
+    this.showConfig.set(false);
   }
 
   public pauseTimer(): void {
