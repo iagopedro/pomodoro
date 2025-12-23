@@ -239,6 +239,7 @@
   flex-grow: 0;
   justify-content: space-between;
   gap: 1.5rem;
+  position: relative; // Para posicionar o botão de áudio
   
   h1 {
     margin: 0;
@@ -695,5 +696,97 @@ h2, h3 {
   
   .progress {
     box-shadow: 0 2px 8px rgba(244, 67, 54, 0.2);
+  }
+}
+
+/**
+ * Botão Toggle de Áudio
+ * 
+ * Estratégia SCSS:
+ * 1. Position Absolute: Posicionado no canto superior direito do .timer-card
+ * 2. Não interfere no layout: Removido do fluxo normal (position: absolute)
+ * 3. Z-index: Garante que fica acima de outros elementos
+ * 4. Estados visuais: Muda cor e ícone quando enabled/disabled
+ * 5. Responsivo: Ajusta tamanho e posição em diferentes resoluções
+ * 6. Sem quebra de dimensões: O .title-box continua centralizado normalmente
+ */
+.btn-audio-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--mat-sys-outline);
+  background: var(--mat-sys-surface-variant);
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+  line-height: 1;
+  padding: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  
+  // Estado: Áudio desabilitado (padrão)
+  &:not(.enabled) {
+    background: var(--mat-sys-surface-variant);
+    border-color: var(--mat-sys-outline);
+    opacity: 0.7;
+    
+    &:hover {
+      background: var(--mat-sys-secondary-container);
+      border-color: var(--mat-sys-secondary);
+      opacity: 1;
+      transform: scale(1.05);
+    }
+  }
+  
+  // Estado: Áudio habilitado
+  &.enabled {
+    background: var(--mat-sys-primary-container);
+    border-color: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary-container);
+    box-shadow: 0 2px 12px rgba(244, 67, 54, 0.3);
+    
+    &:hover {
+      background: var(--mat-sys-primary);
+      color: var(--mat-sys-on-primary);
+      transform: scale(1.1);
+    }
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  // Responsividade - Tablet
+  @media (max-width: 900px) {
+    width: 44px;
+    height: 44px;
+    font-size: 1.35rem;
+    top: 18px;
+    right: 18px;
+  }
+  
+  // Responsividade - Mobile
+  @media (max-width: 768px) {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+    top: 16px;
+    right: 16px;
+  }
+  
+  // Responsividade - Mobile pequeno
+  @media (max-width: 480px) {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+    top: 12px;
+    right: 12px;
   }
 }

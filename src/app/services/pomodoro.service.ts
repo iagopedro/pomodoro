@@ -51,6 +51,7 @@ export class PomodoroService {
   private _currentSession = signal<number>(1);
   private _totalSessions = signal<number>(0);
   private _isRunning = signal<boolean>(false);
+  private _audioEnabled = signal<boolean>(false);
 
   // Computed signals públicos - API read-only para componentes
   public readonly config = computed(() => this._config());
@@ -59,6 +60,7 @@ export class PomodoroService {
   public readonly currentSession = computed(() => this._currentSession());
   public readonly totalSessions = computed(() => this._totalSessions());
   public readonly isRunning = computed(() => this._isRunning());
+  public readonly audioEnabled = computed(() => this._audioEnabled());
   
   // Computed para formatar tempo em MM:SS
   public readonly formattedTime = computed(() => {
@@ -157,14 +159,90 @@ export class PomodoroService {
     }
   }
 
+  /**
+   * Toggle de áudio - Solicita permissão ao ativar
+   * Navegadores modernos bloqueiam autoplay até interação do usuário
+   * 
+   * Estratégia robusta:
+   * 1. Toca um áudio de teste real (volume baixo)
+   * 2. Aguarda confirmação de que o play() foi bem-sucedido
+   * 3. Valida que o navegador permitiu a reprodução
+   * 4. Só marca como habilitado após sucesso confirmado
+   */
+  public async toggleAudio(): Promise<void> {
+    const currentState = this._audioEnabled();
+    
+    if (!currentState) {
+      // Ativando áudio - solicitar permissão via reprodução real
+      try {
+        console.log('[PomodoroService] Solicitando permissão de áudio...');
+        
+        // Criar áudio de teste com um dos sons do app (volume baixo)
+        const testAudio = new Audio(this.audioFight);
+        testAudio.volume = 0.1; // Volume baixo para teste
+        testAudio.currentTime = 0;
+        
+        // Tentar reproduzir - isso dispara o pedido de permissão
+        const playPromise = testAudio.play();
+        
+        if (playPromise !== undefined) {
+          // Aguardar promessa resolver (garantia que o browser permitiu)
+          await playPromise;
+          
+          // Parar o áudio de teste imediatamente
+          testAudio.pause();
+          testAudio.currentTime = 0;
+          
+          // Validar que não houve erro
+          if (!testAudio.error) {
+            this._audioEnabled.set(true);
+            console.log('[PomodoroService] ✅ Áudio habilitado com sucesso!');
+            console.log('[PomodoroService] Permissão concedida pelo navegador');
+          } else {
+            throw new Error('Erro ao reproduzir áudio de teste');
+          }
+        } else {
+          // Fallback para navegadores antigos
+          testAudio.pause();
+          this._audioEnabled.set(true);
+          console.log('[PomodoroService] ✅ Áudio habilitado (navegador legado)');
+        }
+      } catch (error) {
+        console.error('[PomodoroService] ❌ Falha ao habilitar áudio:', error);
+        
+        // Mensagem específica baseada no erro
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        
+        if (errorMessage.includes('NotAllowedError') || errorMessage.includes('play')) {
+          alert('⚠️ Permissão de áudio negada!\n\nO navegador bloqueou a reprodução de áudio.\n\nPor favor:\n1. Clique no ícone 🔒 na barra de endereços\n2. Permita áudio para este site\n3. Tente novamente');
+        } else {
+          alert('⚠️ Erro ao ativar áudio:\n' + errorMessage);
+        }
+        
+        // Garantir que permanece desabilitado
+        this._audioEnabled.set(false);
+      }
+    } else {
+      // Desativando áudio
+      this._audioEnabled.set(false);
+      console.log('[PomodoroService] 🔇 Áudio desabilitado');
+    }
+  }
+
   // Métodos privados - Lógica interna do serviço
   
   private playSound(audioSrc: string, volume: number): void {
+    // Verificar se áudio está habilitado
+    if (!this._audioEnabled()) {
+      console.log('[PomodoroService] Áudio desabilitado - não tocando som');
+      return;
+    }
+    
     try {
       this.audio?.pause();
       this.audio = new Audio(audioSrc);
       this.audio.currentTime = 0;
-      this.audio.volume = volume; // Volume a 100%
+      this.audio.volume = volume;
       this.audio.play().catch(err => {
         console.warn('[PomodoroService] Audio bloqueado ou falhou:', err);
       });

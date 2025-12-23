@@ -38,6 +38,7 @@ export class PomodoroComponent implements OnDestroy {
   public readonly isRunning = this.pomodoroService.isRunning;
   public readonly formattedTime = this.pomodoroService.formattedTime;
   public readonly progress = this.pomodoroService.progress;
+  public readonly audioEnabled = this.pomodoroService.audioEnabled;
 
   // Enum para template
   public readonly TimerState = TimerState;
@@ -113,5 +114,9 @@ export class PomodoroComponent implements OnDestroy {
     } else {
       this.showConfig.set(true);
     }
+  }
+
+  public async toggleAudio(): Promise<void> {
+    await this.pomodoroService.toggleAudio();
   }
 }

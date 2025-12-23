@@ -7,6 +7,20 @@
   <div class="cards-row" [class.config-visible]="showConfig()">
     <!-- Timer Principal -->
     <div class="timer-card">
+      <!-- Botão de áudio no canto superior direito -->
+      <button 
+        class="btn-audio-toggle" 
+        (click)="toggleAudio()" 
+        [class.enabled]="audioEnabled()"
+        [title]="audioEnabled() ? 'Desativar som' : 'Ativar som'"
+      >
+        @if (audioEnabled()) {
+          🔊
+        } @else {
+          🔇
+        }
+      </button>
+      
       <div class="title-box">
         <h1>🍅 {{ title }}</h1>
       </div>
