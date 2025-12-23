@@ -258,7 +258,7 @@ export class PomodoroService {
   
   private playWinSound(): void {
     console.log('🎮 Street Fighter: YOU WIN!');
-    this.playSound(this.audioWin, 0.7);
+    this.playSound(this.audioWin, 0.5);
   }
 
   private startWorkSession(): void {
