@@ -14,11 +14,17 @@
 ## Funcionalidades Implementadas
 
 ✅ **Angular v20 Signals**: Sistema reativo moderno para gerenciamento de estado
+
 ✅ **Standalone Components**: Componentes independentes sem módulos
+
 ✅ **inject() API**: Nova forma de injeção de dependências  
+
 ✅ **Control Flow**: Novo syntax @if/@else no template
+
 ✅ **Material Design 3**: Tema escuro com cor vermelha
+
 ✅ **Pomodoro Timer**: Timer funcional com configurações personalizáveis
+
 ✅ **Interface Responsiva**: Design adaptativo para mobile e desktop
 
 ## Acesso à Aplicação
