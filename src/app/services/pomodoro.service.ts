@@ -520,7 +520,7 @@ export class PomodoroService {
     // 📢 Notificação: Sessão de trabalho iniciada
     this.sendNotification(
       '💼 Sessão de Trabalho Iniciada!',
-      `Foque por ${this._config().workTime} minutos. Você consegue! 🎯`
+      `Foque por ${this._config().workTime} ${this._config().workTime === 1 ? 'minuto' : 'minutos'}. Você consegue! 🎯`
     );
   }
 
@@ -533,11 +533,11 @@ export class PomodoroService {
     if (isLongBreak) {
       this._currentState.set(TimerState.LONG_BREAK);
       totalTime = this._config().longBreakTime * 60;
-      breakMessage = `☕ Pausa Longa - ${this._config().longBreakTime} minutos de descanso merecido!`;
+      breakMessage = `☕ Pausa Longa - ${this._config().longBreakTime} ${this._config().longBreakTime === 1 ? 'minuto' : 'minutos'} de descanso merecido!`;
     } else {
       this._currentState.set(TimerState.BREAK);
       totalTime = this._config().breakTime * 60;
-      breakMessage = `☕ Pausa Curta - Relaxe por ${this._config().breakTime} minutos`;
+      breakMessage = `☕ Pausa Curta - Relaxe por ${this._config().breakTime} ${this._config().breakTime === 1 ? 'minuto' : 'minutos'}`;
     }
     
     this._remainingTime.set(totalTime);
