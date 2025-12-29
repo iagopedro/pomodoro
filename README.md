@@ -2,6 +2,10 @@
 
 Uma aplicação completa de Pomodoro Timer desenvolvida com **Angular v20** e **Angular Material**, demonstrando os recursos mais modernos do framework e oferecendo uma experiência produtiva para gerenciamento de tempo.
 
+## 🌐 Demo Online
+
+🚀 **Acesse a aplicação:** [https://iagopedro.github.io/pomodoro/](https://iagopedro.github.io/pomodoro/)
+
 ## ✨ Funcionalidades
 
 ### ⏱️ Timer Pomodoro Completo
@@ -59,9 +63,9 @@ Este projeto demonstra os recursos mais modernos do Angular:
 
 ### Passos
 
-1. **Clone o repositório** (se aplicável)
+1. **Clone o repositório**
 ```bash
-git clone [url-do-repositorio]
+git clone https://github.com/iagopedro/pomodoro.git
 cd pomodoro
 ```
 
