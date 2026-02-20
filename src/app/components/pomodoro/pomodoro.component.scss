@@ -16,6 +16,8 @@
   min-height: 100vh;
   box-sizing: border-box;
   overflow-x: hidden;
+  align-items: center;
+  justify-content: center;
   
   // Enhanced heading styles
   h1 {
@@ -70,8 +72,9 @@
   margin: 0 auto;
   box-sizing: border-box;
   
+  // Mantém centralização vertical mesmo com config aberto
   &.config-visible {
-    align-items: flex-start;
+    align-items: center;
   }
   
   @media (max-width: 1200px) {
@@ -97,6 +100,10 @@
 
 /**
  * Config Card - Glassmorphism style
+ * 
+ * Altura consistente:
+ * - Desktop/Tablet: Sempre mesma altura do timer-card
+ * - Mobile (<900px): Auto-height para layout em coluna
  */
 .config-card {
   background: var(--glass-background);
@@ -108,8 +115,12 @@
   border: 1px solid var(--glass-border);
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
   gap: clamp(12px, 1.5vw, 20px);
-  min-height: 0;
+  height: calc(100vh - 64px);
+  max-height: calc(100vh - 64px);
+  min-height: 500px;
   overflow-y: auto;
   animation: slideInRight var(--transition-slow);
   width: clamp(260px, 22vw, 300px);
@@ -132,12 +143,15 @@
     color: var(--color-text-primary);
     margin: 0;
     padding-right: var(--space-2xl); // Space for close button
+    flex-shrink: 0;
   }
   
   @media (max-width: 1200px) {
     width: 280px;
     max-width: 280px;
     padding: var(--space-lg);
+    height: calc(100vh - 56px);
+    max-height: calc(100vh - 56px);
   }
   
   // Otimização para notebooks 15.6"
@@ -146,11 +160,15 @@
     max-width: 270px;
     padding: clamp(14px, 1.8vw, 18px);
     gap: clamp(10px, 1.2vw, 16px);
+    height: calc(100vh - 60px);
+    max-height: calc(100vh - 60px);
   }
   
   @media (max-width: 900px) {
     padding: var(--space-lg);
     height: auto;
+    min-height: auto;
+    max-height: none;
     overflow-y: visible;
     animation: slideInDown var(--transition-slow);
     width: 100%;
@@ -254,6 +272,10 @@
 
 /**
  * Timer Card - Hero element with glassmorphism
+ * 
+ * Altura consistente:
+ * - Desktop/Tablet: Sempre mesma altura do config-card
+ * - Mobile (<900px): Auto-height para layout em coluna
  */
 .timer-card {
   background: var(--glass-background);
@@ -265,8 +287,9 @@
   border: 1px solid var(--glass-border);
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  max-height: calc(100vh - 32px);
+  height: calc(100vh - 64px);
+  max-height: calc(100vh - 64px);
+  min-height: 500px;
   overflow-y: auto;
   text-align: center;
   width: clamp(500px, 60vw, 750px);
@@ -289,7 +312,8 @@
   
   @media (max-width: 1200px) {
     width: clamp(500px, 80vw, 700px);
-    max-height: calc(100vh - 40px);
+    height: calc(100vh - 56px);
+    max-height: calc(100vh - 56px);
   }
   
   // Otimização específica para notebooks 15.6" (1366x768)
@@ -297,17 +321,22 @@
     width: clamp(480px, 58vw, 680px);
     padding: clamp(1.25rem, 2vw, 1.75rem);
     gap: clamp(0.875rem, 1.5vw, 1.25rem);
+    height: calc(100vh - 60px);
+    max-height: calc(100vh - 60px);
   }
   
   @media (max-width: 1024px) {
     width: 90vw;
     max-width: 700px;
     padding: clamp(1.25rem, 2.5vw, 2rem);
+    height: calc(100vh - 48px);
+    max-height: calc(100vh - 48px);
   }
   
   @media (max-width: 900px) {
     height: auto;
     max-height: calc(100vh - 40px);
+    min-height: auto;
     overflow-y: visible;
     width: 100%;
     max-width: 600px;
@@ -607,6 +636,13 @@
 .btn.primary {
   background: var(--mat-sys-primary);
   color: var(--mat-sys-on-primary);
+  flex-shrink: 0;
+  
+  // Botão de salvar no card de config ocupa largura total
+  .config-card & {
+    width: 100%;
+    margin-top: clamp(8px, 1vw, 12px);
+  }
 }
 
 .btn:hover {
@@ -624,18 +660,19 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: clamp(14px, 2vw, 20px);
-  margin: clamp(16px, 2.5vw, 24px) 0;
-  flex: 1;
+  margin-top: clamp(40px, 2.5vw, 24px);
+  flex-shrink: 0;
   
   @media (max-width: 768px) {
     gap: 14px;
-    margin: 16px 0;
+    margin-top: 16px;
   }
 }
 
 .form-field {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 }
 
 .form-field label {
