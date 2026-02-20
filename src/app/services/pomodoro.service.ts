@@ -20,6 +20,20 @@ export interface PomodoroConfig {
   workSessions: number;
 }
 
+export type BaseColor = 'default' | 'red' | 'blue' | 'green' | 'yellow' | 'purple';
+export type ThemeColor = 'red' | 'blue' | 'green' | 'yellow' | 'purple' | 'black' | 'white' | 'red-light' | 'blue-light' | 'green-light' | 'yellow-light' | 'purple-light';
+
+export interface PomodoroTheme {
+  id: ThemeColor;
+  name: string;
+  icon: string;
+  primary: string;
+  accent: string;
+  background: string;
+  surface: string;
+  text: string;
+}
+
 /**
  * Serviço Pomodoro - Angular v20 com Signals
  * 
@@ -45,6 +59,128 @@ export class PomodoroService {
     workSessions: 4      // 4 sessões antes da pausa longa
   };
 
+  // Temas disponíveis
+  private readonly availableThemes: PomodoroTheme[] = [
+    {
+      id: 'black',
+      name: 'Preto',
+      icon: '⚫',
+      primary: '#e8e8e8',    // Cinza platinum (moderno, alto contraste)
+      accent: '#a0a0a0',     // Cinza prata (contraste intermediário)
+      background: '#0a0a0a', // Preto profundo (moderno, reduz fadiga)
+      surface: '#151515',    // Cinza ônix (sutil diferenciação)
+      text: '#e8e8e8'        // Cinza platinum (contraste 18.2:1 com background)
+    },
+    {
+      id: 'white',
+      name: 'Branco',
+      icon: '⚪',
+      primary: '#1a1a1a',    // Cinza carbono (moderno, alto contraste)
+      accent: '#4a4a4a',     // Cinza grafite (contraste intermediário)
+      background: '#fafafa', // Off-white suave (reduz fadiga visual)
+      surface: '#f0f0f0',    // Cinza pearl (sutil diferenciação)
+      text: '#1a1a1a'        // Cinza carbono (contraste 17.9:1 com background)
+    },
+    {
+      id: 'red',
+      name: 'Vermelho',
+      icon: '🔴',
+      primary: '#d32f2f',
+      accent: '#ff5252',
+      background: '#0a0a0a',
+      surface: '#151515',
+      text: '#ffffff'
+    },
+    {
+      id: 'blue',
+      name: 'Azul',
+      icon: '🔵',
+      primary: '#1976d2',
+      accent: '#42a5f5',
+      background: '#0a0a0a',
+      surface: '#151515',
+      text: '#ffffff'
+    },
+    {
+      id: 'green',
+      name: 'Verde',
+      icon: '🟢',
+      primary: '#388e3c',
+      accent: '#66bb6a',
+      background: '#0a0a0a',
+      surface: '#151515',
+      text: '#ffffff'
+    },
+    {
+      id: 'yellow',
+      name: 'Amarelo',
+      icon: '🟡',
+      primary: '#f57c00',
+      accent: '#ffb74d',
+      background: '#0a0a0a',
+      surface: '#151515',
+      text: '#ffffff'
+    },
+    {
+      id: 'purple',
+      name: 'Roxo',
+      icon: '🟣',
+      primary: '#7b1fa2',
+      accent: '#ba68c8',
+      background: '#0a0a0a',
+      surface: '#151515',
+      text: '#ffffff'
+    },    {
+      id: 'red-light',
+      name: 'Vermelho Claro',
+      icon: '🔴',
+      primary: '#b71c1c',    // Vermelho escuro (melhor contraste em fundo claro)
+      accent: '#d32f2f',     // Vermelho médio
+      background: '#fafafa', // Off-white suave
+      surface: '#f0f0f0',    // Cinza pearl
+      text: '#1a1a1a'        // Texto escuro
+    },
+    {
+      id: 'blue-light',
+      name: 'Azul Claro',
+      icon: '🔵',
+      primary: '#0d47a1',    // Azul escuro (melhor contraste em fundo claro)
+      accent: '#1976d2',     // Azul médio
+      background: '#fafafa', // Off-white suave
+      surface: '#f0f0f0',    // Cinza pearl
+      text: '#1a1a1a'        // Texto escuro
+    },
+    {
+      id: 'green-light',
+      name: 'Verde Claro',
+      icon: '🟢',
+      primary: '#1b5e20',    // Verde escuro (melhor contraste em fundo claro)
+      accent: '#388e3c',     // Verde médio
+      background: '#fafafa', // Off-white suave
+      surface: '#f0f0f0',    // Cinza pearl
+      text: '#1a1a1a'        // Texto escuro
+    },
+    {
+      id: 'yellow-light',
+      name: 'Amarelo Claro',
+      icon: '🟡',
+      primary: '#e65100',    // Laranja escuro (melhor contraste em fundo claro)
+      accent: '#f57c00',     // Laranja médio
+      background: '#fafafa', // Off-white suave
+      surface: '#f0f0f0',    // Cinza pearl
+      text: '#1a1a1a'        // Texto escuro
+    },
+    {
+      id: 'purple-light',
+      name: 'Roxo Claro',
+      icon: '🟪',
+      primary: '#4a148c',    // Roxo escuro (melhor contraste em fundo claro)
+      accent: '#7b1fa2',     // Roxo médio
+      background: '#fafafa', // Off-white suave
+      surface: '#f0f0f0',    // Cinza pearl
+      text: '#1a1a1a'        // Texto escuro
+    },  ];
+
   // Signals privados para controle interno do estado
   private _config = signal<PomodoroConfig>(this.defaultConfig);
   private _currentState = signal<TimerState>(TimerState.IDLE);
@@ -54,6 +190,9 @@ export class PomodoroService {
   private _isRunning = signal<boolean>(false);
   private _audioEnabled = signal<boolean>(false);
   private _notificationsEnabled = signal<boolean>(false);
+  private _isDarkMode = signal<boolean>(true); // Dark mode ativado por padrão
+  private _baseColor = signal<BaseColor>('default'); // Cor base padrão
+  private _currentTheme = signal<PomodoroTheme>(this.availableThemes[0]); // Tema padrão: Preto
 
   // Computed signals públicos - API read-only para componentes
   public readonly config = computed(() => this._config());
@@ -64,6 +203,20 @@ export class PomodoroService {
   public readonly isRunning = computed(() => this._isRunning());
   public readonly audioEnabled = computed(() => this._audioEnabled());
   public readonly notificationsEnabled = computed(() => this._notificationsEnabled());
+  public readonly isDarkMode = computed(() => this._isDarkMode());
+  public readonly baseColor = computed(() => this._baseColor());
+  public readonly currentTheme = computed(() => this._currentTheme());
+  public readonly themes = computed(() => this.availableThemes);
+  
+  // Cores base disponíveis para seleção
+  public readonly baseColors = computed<Array<{id: BaseColor, name: string, icon: string}>>(() => [
+    { id: 'default', name: 'Padrão', icon: this._isDarkMode() ? '⚫' : '⚪' },
+    { id: 'red', name: 'Vermelho', icon: '🔴' },
+    { id: 'blue', name: 'Azul', icon: '🔵' },
+    { id: 'green', name: 'Verde', icon: '🟢' },
+    { id: 'yellow', name: 'Amarelo', icon: '🟡' },
+    { id: 'purple', name: 'Roxo', icon: '🟣' },
+  ]);
   
   // Computed para formatar tempo em MM:SS
   public readonly formattedTime = computed(() => {
@@ -102,12 +255,29 @@ export class PomodoroService {
   private titleBlinkInterval: any = null;
 
   constructor() {
+    // Carregar preferências salvas do localStorage
+    this.loadSavedTheme();
+    
     // Effect - Monitora mudanças de estado para logs
     effect(() => {
       const state = this._currentState();
       const time = this._remainingTime();
       
       console.log(`[PomodoroService] Estado: ${state}, Tempo: ${time}s`);
+    });
+    
+    // Effect - Aplica tema quando dark mode ou cor base muda
+    effect(() => {
+      const isDark = this._isDarkMode();
+      const baseColor = this._baseColor();
+      const theme = this.getThemeFromColorAndMode(baseColor, isDark);
+      this._currentTheme.set(theme);
+    });
+    
+    // Effect - Aplica tema nas CSS variables quando muda
+    effect(() => {
+      const theme = this._currentTheme();
+      this.applyTheme(theme);
     });
   }
 
@@ -238,6 +408,249 @@ export class PomodoroService {
       // Desativando áudio
       this._audioEnabled.set(false);
       console.log('[PomodoroService] 🔇 Áudio desabilitado');
+    }
+  }
+
+  /**
+   * Alterna entre modo escuro e claro
+   */
+  public toggleDarkMode(): void {
+    const newMode = !this._isDarkMode();
+    this._isDarkMode.set(newMode);
+    this.saveThemePreferences();
+    console.log(`[PomodoroService] 🌓 Modo ${newMode ? 'escuro' : 'claro'} ativado`);
+  }
+
+  /**
+   * Define a cor base do tema
+   * 
+   * @param color - Cor base a ser aplicada
+   */
+  public setBaseColor(color: BaseColor): void {
+    this._baseColor.set(color);
+    this.saveThemePreferences();
+    console.log(`[PomodoroService] 🎨 Cor base alterada: ${color}`);
+  }
+
+  /**
+   * Mapeia cor base + dark mode para o tema correto
+   * 
+   * @param baseColor - Cor base selecionada
+   * @param isDark - Se está em modo escuro
+   * @returns Tema correspondente
+   */
+  private getThemeFromColorAndMode(baseColor: BaseColor, isDark: boolean): PomodoroTheme {
+    let themeId: ThemeColor;
+    
+    if (baseColor === 'default') {
+      themeId = isDark ? 'black' : 'white';
+    } else {
+      themeId = isDark ? baseColor : `${baseColor}-light` as ThemeColor;
+    }
+    
+    const theme = this.availableThemes.find(t => t.id === themeId);
+    
+    if (!theme) {
+      console.error(`[PomodoroService] ❌ Tema não encontrado: ${themeId}`);
+      return this.availableThemes[0]; // Fallback para primeiro tema
+    }
+    
+    return theme;
+  }
+
+  /**
+   * Troca o tema atual (mantido para compatibilidade)
+   * @deprecated Use setBaseColor e toggleDarkMode
+   * 
+   * @param themeId - ID do tema a ser aplicado
+   */
+  public setTheme(themeId: ThemeColor): void {
+    const theme = this.availableThemes.find(t => t.id === themeId);
+    
+    if (!theme) {
+      console.error(`[PomodoroService] ❌ Tema não encontrado: ${themeId}`);
+      return;
+    }
+    
+    console.log(`[PomodoroService] 🎨 Aplicando tema: ${theme.name}`);
+    this._currentTheme.set(theme);
+  }
+
+  /**
+   * Aplica o tema nas CSS variables do documento
+   * 
+   * @param theme - Tema a ser aplicado
+   */
+  private applyTheme(theme: PomodoroTheme): void {
+    const root = document.documentElement;
+    
+    root.style.setProperty('--color-primary', theme.primary);
+    root.style.setProperty('--color-accent', theme.accent);
+    root.style.setProperty('--color-background', theme.background);
+    root.style.setProperty('--color-surface', theme.surface);
+    root.style.setProperty('--color-text', theme.text);
+    
+    // Extrai valores RGB para sombras dinâmicas
+    const primaryRgb = this.hexToRgb(theme.primary);
+    const accentRgb = this.hexToRgb(theme.accent);
+    
+    root.style.setProperty('--shadow-primary-rgb', primaryRgb);
+    root.style.setProperty('--shadow-accent-rgb', accentRgb);
+    
+    // Define variável de glow dinâmica baseada no accent do tema
+    root.style.setProperty('--color-accent-glow', `rgba(${accentRgb}, 0.3)`);
+    
+    // Detecta se o tema é claro ou escuro baseado no background
+    const isDarkTheme = this.isColorDark(theme.background);
+    
+    // Ajusta variáveis de glassmorfismo e overlay baseado no tema
+    if (isDarkTheme) {
+      // Tema escuro: overlays brancos semi-transparentes
+      root.style.setProperty('--glass-background', 'rgba(255, 255, 255, 0.05)');
+      root.style.setProperty('--glass-border', 'rgba(255, 255, 255, 0.1)');
+      root.style.setProperty('--color-surface-overlay', 'rgba(255, 255, 255, 0.05)');
+      root.style.setProperty('--color-text-secondary', 'rgba(255, 255, 255, 0.7)');
+      root.style.setProperty('--color-text-tertiary', 'rgba(255, 255, 255, 0.5)');
+      
+      // Cor de texto inversa: 
+      // - Tema padrão escuro (black): usa PRETO sobre cinzas claros (#e8e8e8, #a0a0a0)
+      // - Temas coloridos escuros: usa BRANCO sobre cores vibrantes
+      if (theme.id === 'black') {
+        root.style.setProperty('--color-text-inverse', '#000000');
+      } else {
+        root.style.setProperty('--color-text-inverse', '#ffffff');
+      }
+      
+      // Overlays adaptáveis para diferentes opacidades
+      root.style.setProperty('--overlay-subtle', 'rgba(255, 255, 255, 0.03)');
+      root.style.setProperty('--overlay-light', 'rgba(255, 255, 255, 0.05)');
+      root.style.setProperty('--overlay-medium', 'rgba(255, 255, 255, 0.1)');
+      root.style.setProperty('--overlay-strong', 'rgba(255, 255, 255, 0.15)');
+      root.style.setProperty('--overlay-intense', 'rgba(255, 255, 255, 0.2)');
+      
+      // Borders adaptáveis
+      root.style.setProperty('--border-subtle', 'rgba(255, 255, 255, 0.05)');
+      root.style.setProperty('--border-light', 'rgba(255, 255, 255, 0.08)');
+      root.style.setProperty('--border-medium', 'rgba(255, 255, 255, 0.1)');
+      root.style.setProperty('--border-strong', 'rgba(255, 255, 255, 0.2)');
+      root.style.setProperty('--border-intense', 'rgba(255, 255, 255, 0.25)');
+      
+      // Sombras para tema escuro
+      root.style.setProperty('--shadow-sm', '0 2px 4px rgba(0, 0, 0, 0.2)');
+      root.style.setProperty('--shadow-md', '0 4px 12px rgba(0, 0, 0, 0.25)');
+      root.style.setProperty('--shadow-lg', '0 8px 24px rgba(0, 0, 0, 0.3)');
+      root.style.setProperty('--shadow-xl', '0 12px 48px rgba(0, 0, 0, 0.4)');
+      root.style.setProperty('--shadow-inset', 'inset 0 2px 4px rgba(0, 0, 0, 0.2)');
+      root.style.setProperty('--shadow-drop', '0 2px 4px rgba(0, 0, 0, 0.3)');
+    } else {
+      // Tema claro: overlays pretos semi-transparentes com opacidades otimizadas
+      root.style.setProperty('--glass-background', 'rgba(0, 0, 0, 0.03)');
+      root.style.setProperty('--glass-border', 'rgba(0, 0, 0, 0.08)');
+      root.style.setProperty('--color-surface-overlay', 'rgba(0, 0, 0, 0.03)');
+      root.style.setProperty('--color-text-secondary', 'rgba(0, 0, 0, 0.65)');
+      root.style.setProperty('--color-text-tertiary', 'rgba(0, 0, 0, 0.45)');
+      
+      // Cor de texto inversa: SEMPRE BRANCO para máximo contraste em botões coloridos
+      // (Funciona bem tanto em cores escuras quanto em cores saturadas)
+      root.style.setProperty('--color-text-inverse', '#ffffff');
+      
+      // Overlays adaptáveis para diferentes opacidades (tema claro)
+      root.style.setProperty('--overlay-subtle', 'rgba(0, 0, 0, 0.02)');
+      root.style.setProperty('--overlay-light', 'rgba(0, 0, 0, 0.03)');
+      root.style.setProperty('--overlay-medium', 'rgba(0, 0, 0, 0.06)');
+      root.style.setProperty('--overlay-strong', 'rgba(0, 0, 0, 0.08)');
+      root.style.setProperty('--overlay-intense', 'rgba(0, 0, 0, 0.12)');
+      
+      // Borders adaptáveis (tema claro)
+      root.style.setProperty('--border-subtle', 'rgba(0, 0, 0, 0.04)');
+      root.style.setProperty('--border-light', 'rgba(0, 0, 0, 0.06)');
+      root.style.setProperty('--border-medium', 'rgba(0, 0, 0, 0.08)');
+      root.style.setProperty('--border-strong', 'rgba(0, 0, 0, 0.12)');
+      root.style.setProperty('--border-intense', 'rgba(0, 0, 0, 0.16)');
+      
+      // Sombras para tema claro (mais sutis e suaves)
+      root.style.setProperty('--shadow-sm', '0 1px 3px rgba(0, 0, 0, 0.08)');
+      root.style.setProperty('--shadow-md', '0 2px 8px rgba(0, 0, 0, 0.12)');
+      root.style.setProperty('--shadow-lg', '0 4px 16px rgba(0, 0, 0, 0.16)');
+      root.style.setProperty('--shadow-xl', '0 8px 32px rgba(0, 0, 0, 0.2)');
+      root.style.setProperty('--shadow-inset', 'inset 0 1px 3px rgba(0, 0, 0, 0.12)');
+      root.style.setProperty('--shadow-drop', '0 1px 3px rgba(0, 0, 0, 0.2)');
+    }
+    
+    // Atualiza --color-text-primary para seguir o theme.text
+    root.style.setProperty('--color-text-primary', theme.text);
+    
+    console.log(`[PomodoroService] ✅ Tema aplicado: ${theme.name} (${isDarkTheme ? 'escuro' : 'claro'})`);
+  }
+  
+  /**
+   * Determina se uma cor é escura ou clara
+   * 
+   * @param hex - Cor em formato hexadecimal
+   * @returns true se a cor for escura, false se for clara
+   */
+  private isColorDark(hex: string): boolean {
+    const rgb = this.hexToRgb(hex);
+    const [r, g, b] = rgb.split(',').map(v => parseInt(v.trim()));
+    
+    // Calcula luminosidade relativa (fórmula do W3C)
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    
+    // Retorna true se luminosidade < 0.5 (escuro)
+    return luminance < 0.5;
+  }
+  
+  /**
+   * Converte cor hexadecimal para RGB
+   * 
+   * @param hex - Cor em formato hexadecimal (#RRGGBB)
+   * @returns String no formato "r, g, b"
+   */
+  private hexToRgb(hex: string): string {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (!result) {
+      return '211, 47, 47'; // fallback para vermelho padrão
+    }
+    
+    const r = parseInt(result[1], 16);
+    const g = parseInt(result[2], 16);
+    const b = parseInt(result[3], 16);
+    
+    return `${r}, ${g}, ${b}`;
+  }
+
+  /**
+   * Salva as preferências de tema no localStorage
+   */
+  private saveThemePreferences(): void {
+    try {
+      localStorage.setItem('pomodoro-dark-mode', this._isDarkMode().toString());
+      localStorage.setItem('pomodoro-base-color', this._baseColor());
+      console.log(`[PomodoroService] 💾 Preferências salvas: ${this._isDarkMode() ? 'escuro' : 'claro'} - ${this._baseColor()}`);
+    } catch (error) {
+      console.error('[PomodoroService] Erro ao salvar preferências:', error);
+    }
+  }
+
+  /**
+   * Carrega as preferências de tema do localStorage
+   */
+  private loadSavedTheme(): void {
+    try {
+      const savedDarkMode = localStorage.getItem('pomodoro-dark-mode');
+      const savedBaseColor = localStorage.getItem('pomodoro-base-color') as BaseColor | null;
+      
+      if (savedDarkMode !== null) {
+        this._isDarkMode.set(savedDarkMode === 'true');
+      }
+      
+      if (savedBaseColor && ['default', 'red', 'blue', 'green', 'yellow', 'purple'].includes(savedBaseColor)) {
+        this._baseColor.set(savedBaseColor);
+      }
+      
+      console.log(`[PomodoroService] 📂 Preferências carregadas: ${this._isDarkMode() ? 'escuro' : 'claro'} - ${this._baseColor()}`);
+    } catch (error) {
+      console.error('[PomodoroService] Erro ao carregar preferências:', error);
     }
   }
 
@@ -520,7 +933,8 @@ export class PomodoroService {
     // 📢 Notificação: Sessão de trabalho iniciada
     this.sendNotification(
       '💼 Sessão de Trabalho Iniciada!',
-      `Foque por ${this._config().workTime} ${this._config().workTime === 1 ? 'minuto' : 'minutos'}. Você consegue! 🎯`
+      `Foque por ${this._config().workTime} ${this._config().workTime === 1 ? 'minuto' : 'minutos'}
+      . Você consegue! 🎯`
     );
   }
 

@@ -5,15 +5,23 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    color: #f44336;
+    // Gradiente dinâmico usando cores do tema
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     font-size: 24px;
     margin: 0;
     padding: 24px 24px 16px;
+    font-weight: 600;
     
     mat-icon {
       font-size: 32px;
       width: 32px;
       height: 32px;
+      // Ícone usa cor primária do tema
+      color: var(--color-primary);
+      filter: drop-shadow(0 2px 4px var(--color-accent-glow));
     }
   }
   
@@ -27,7 +35,7 @@
         font-size: 20px;
         font-weight: 500;
         margin: 0 0 8px;
-        color: rgba(255, 255, 255, 0.87);
+        color: var(--color-text-primary);
       }
       
       .exercise-duration {
@@ -35,28 +43,35 @@
         align-items: center;
         gap: 8px;
         font-size: 14px;
-        color: rgba(255, 255, 255, 0.6);
+        color: var(--color-text-secondary);
         margin: 0;
         
         mat-icon {
           font-size: 18px;
           width: 18px;
           height: 18px;
+          color: var(--color-accent);
         }
       }
     }
     
     .exercise-instructions {
-      background: rgba(255, 255, 255, 0.05);
-      border-left: 4px solid #f44336;
+      background: var(--overlay-light);
+      border-left: 4px solid var(--color-primary);
       padding: 16px;
-      border-radius: 4px;
+      border-radius: 8px;
       margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+      
+      // Glassmorphism sutil
+      backdrop-filter: blur(4px);
+      border: 1px solid var(--border-subtle);
+      border-left: 4px solid var(--color-primary);
       
       p {
         margin: 0;
         line-height: 1.6;
-        color: rgba(255, 255, 255, 0.87);
+        color: var(--color-text-primary);
         font-size: 15px;
       }
     }
@@ -65,21 +80,27 @@
       display: flex;
       align-items: flex-start;
       gap: 8px;
-      padding: 12px;
-      background: rgba(244, 67, 54, 0.1);
-      border-radius: 4px;
+      padding: 12px 16px;
+      // Background com cor do tema (opacidade baixa)
+      background: linear-gradient(135deg, 
+        rgba(var(--shadow-primary-rgb), 0.08) 0%, 
+        rgba(var(--shadow-accent-rgb), 0.05) 100%
+      );
+      border-radius: 8px;
+      border: 1px solid var(--border-light);
       
       mat-icon {
-        color: #f44336;
+        color: var(--color-accent);
         font-size: 20px;
         width: 20px;
         height: 20px;
         margin-top: 2px;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
       }
       
       span {
         font-size: 13px;
-        color: rgba(255, 255, 255, 0.7);
+        color: var(--color-text-secondary);
         line-height: 1.5;
       }
     }
@@ -88,11 +109,32 @@
   mat-dialog-actions {
     padding: 16px 24px;
     margin: 0;
+    background: var(--overlay-subtle);
+    border-top: 1px solid var(--border-subtle);
     
     .done-button {
       font-size: 16px;
       padding: 0 24px;
       height: 48px;
+      
+      // Gradiente dinâmico do tema
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+      color: var(--color-text-inverse);
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      box-shadow: var(--shadow-md), 0 0 20px var(--color-accent-glow);
+      transition: all var(--transition-normal);
+      
+      &:hover {
+        box-shadow: var(--shadow-lg), 0 0 30px var(--color-accent-glow);
+        filter: brightness(1.05);
+        transform: translateY(-2px);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
       
       mat-icon {
         margin-right: 8px;
