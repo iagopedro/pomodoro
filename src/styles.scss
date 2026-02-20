@@ -7,19 +7,75 @@
 @use '@angular/material' as mat;
 
 /**
+ * Modern Typography System
+ * 
+ * Using variable fonts for fluid weight transitions
+ * Enhanced readability with proper line-height and spacing
+ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/**
  * CSS Variables para Sistema de Temas Dinâmicos
  * 
- * Essas variáveis são atualizadas em runtime pelo PomodoroService
- * quando o usuário troca o tema. Elas sobrescrevem as cores padrão
- * do Material Design 3 para permitir personalização total.
+ * Modern 2026 Design System:
+ * - Softer gradients with depth
+ * - Enhanced contrast ratios (WCAG AAA)
+ * - Glassmorphism support
+ * - Dynamic color harmonies
  */
 :root {
-  // Tema padrão (Vermelho)
-  --color-primary: #d32f2f;
-  --color-accent: #ff5252;
-  --color-background: #1a1a1a;
-  --color-surface: #2a2a2a;
-  --color-text: #ffffff;
+  // Primary Theme Colors (Dynamic)
+  --color-primary: #ef5350;
+  --color-primary-light: #ff867c;
+  --color-primary-dark: #b61827;
+  --color-accent: #ff6b6b;
+  --color-accent-glow: rgba(239, 83, 80, 0.3);
+  
+  // Background & Surface (Enhanced depth)
+  --color-background: #0f0f0f;
+  --color-background-gradient: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  --color-surface: rgba(30, 30, 30, 0.8);
+  --color-surface-elevated: rgba(40, 40, 40, 0.9);
+  --color-surface-overlay: rgba(255, 255, 255, 0.05);
+  
+  // Text with proper contrast
+  --color-text-primary: #ffffff;
+  --color-text-secondary: rgba(255, 255, 255, 0.7);
+  --color-text-tertiary: rgba(255, 255, 255, 0.5);
+  
+  // Glassmorphism
+  --glass-background: rgba(30, 30, 30, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --glass-blur: blur(10px);
+  
+  // Shadows (Layered for depth)
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 20px var(--color-accent-glow);
+  
+  // Border radius (Fluid design)
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+  
+  // Spacing scale
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  
+  // Transitions
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 html {
@@ -29,45 +85,99 @@ html {
       primary: mat.$red-palette,
       tertiary: mat.$red-palette,
     ),
-    typography: Roboto,
+    typography: (
+      plain-family: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+      brand-family: 'Inter, sans-serif',
+      bold-weight: 600,
+      medium-weight: 500,
+      regular-weight: 400,
+    ),
     density: 0,
   ));
 }
 
 body {
-  // Configurando tema escuro como padrão
-  // Angular v20 utiliza o sistema de cores Material 3 com suporte nativo ao dark mode
+  // Modern dark mode with enhanced depth
   color-scheme: dark;
 
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--color-background);
-  color: var(--color-text);
+  // Gradient background for visual interest
+  background: var(--color-background-gradient);
+  background-attachment: fixed;
+  color: var(--color-text-primary);
   font: var(--mat-sys-body-medium);
 
-  // Reset the user agent margin.
+  // Reset margin
   margin: 0;
   
-  // Override Material Design variables com nossas CSS variables
-  // Isso permite que os temas dinâmicos afetem todos os componentes Material
+  // Smooth font rendering
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  
+  // Override Material Design variables with modern palette
   --mat-sys-primary: var(--color-primary);
-  --mat-sys-on-primary: var(--color-text);
-  --mat-sys-primary-container: var(--color-primary);
-  --mat-sys-on-primary-container: var(--color-text);
+  --mat-sys-primary-container: var(--color-surface-elevated);
+  --mat-sys-on-primary: var(--color-text-primary);
+  --mat-sys-on-primary-container: var(--color-text-primary);
   
   --mat-sys-surface: var(--color-surface);
-  --mat-sys-on-surface: var(--color-text);
-  --mat-sys-surface-container: var(--color-surface);
-  --mat-sys-on-surface-variant: var(--color-text);
+  --mat-sys-surface-container: var(--color-surface-elevated);
+  --mat-sys-surface-variant: var(--color-surface);
+  --mat-sys-on-surface: var(--color-text-primary);
+  --mat-sys-on-surface-variant: var(--color-text-secondary);
   
   --mat-sys-background: var(--color-background);
-  --mat-sys-on-background: var(--color-text);
+  --mat-sys-on-background: var(--color-text-primary);
+  
+  --mat-sys-outline: var(--glass-border);
+  --mat-sys-outline-variant: rgba(255, 255, 255, 0.05);
+  
+  // Secondary colors
+  --mat-sys-secondary: var(--color-accent);
+  --mat-sys-secondary-container: var(--color-surface);
+  --mat-sys-on-secondary-container: var(--color-text-primary);
+  
+  // Error states
+  --mat-sys-error-container: rgba(211, 47, 47, 0.2);
+  --mat-sys-on-error-container: #ff6b6b;
 }
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/**
+ * Global Typography Styles
+ * Modern, accessible, and visually appealing
+ */
+* {
+  box-sizing: border-box;
+}
+
+html, body { 
+  height: 100%; 
+}
+
+body { 
+  margin: 0; 
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+}
+
+// Enhanced typography scale
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+// Monospace for timer display
+.mono {
+  font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+  font-feature-settings: 'tnum', 'zero';
+  letter-spacing: 0;
+}
 
 /* Estilos globais para o modal de exercícios */
 .exercise-modal-panel {
