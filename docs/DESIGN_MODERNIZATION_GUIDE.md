@@ -58,13 +58,147 @@ This comprehensive guide outlines the complete modernization of the Pomodoro Tim
 
 ---
 
+### 5. 🎨 Advanced Theme System with Dark/Light Mode
+
+**Implemented Changes:**
+- ✅ **12 Theme Variations**: 2 neutral (Padrão Escuro/Claro) + 5 dark colored + 5 light colored
+- ✅ **Independent Toggle**: Dark/light mode separated from color selection
+- ✅ **Dynamic Icon**: Theme selector shows ⚫ (dark) or ⚪ (light) based on mode
+- ✅ **Automatic Mapping**: `getThemeFromColorAndMode()` intelligently maps color + mode → theme
+- ✅ **Unified Dark Backgrounds**: All dark themes use consistent colors (background: #0a0a0a, surface: #151515)
+- ✅ **Reactive CSS Variables**: Dynamic system with --color-primary, --color-accent, --color-text-inverse, etc.
+- ✅ **Conditional Text Colors**: Smart --color-text-inverse (black on neutral dark, white on colored themes)
+- ✅ **Component Theming**: Modal, snackbar, and all components adapt to theme colors
+- ✅ **LocalStorage Persistence**: Separate storage for dark-mode (boolean) and base-color (string)
+
+**Theme Architecture:**
+
+```typescript
+// Base colors available for selection
+export type BaseColor = 'default' | 'red' | 'blue' | 'green' | 'yellow' | 'purple';
+
+// All theme variations (12 total)
+export type ThemeColor = 
+  | 'black' | 'white'  // Neutral themes
+  | 'red' | 'blue' | 'green' | 'yellow' | 'purple'  // Dark colored
+  | 'red-light' | 'blue-light' | 'green-light' | 'yellow-light' | 'purple-light';  // Light colored
+
+// Mapping logic
+private getThemeFromColorAndMode(baseColor: BaseColor, isDark: boolean): PomodoroTheme {
+  if (baseColor === 'default') {
+    return isDark ? 'black' : 'white';
+  } else {
+    return isDark ? baseColor : `${baseColor}-light` as ThemeColor;
+  }
+}
+```
+
+**Theme Toggle in Config Card:**
+
+```html
+<div class="dark-mode-toggle">
+  <label class="toggle-label">
+    <span class="toggle-text">
+      @if (isDarkMode()) { 🌙 Modo Escuro } 
+      @else { ☀️ Modo Claro }
+    </span>
+    <input type="checkbox" [checked]="isDarkMode()" 
+           (change)="toggleDarkMode()" hidden>
+    <span class="toggle-switch" [class.active]="isDarkMode()"></span>
+  </label>
+</div>
+```
+
+**Custom Switch Styling:**
+
+```scss
+.toggle-switch {
+  position: relative;
+  width: 52px;
+  height: 28px;
+  background: var(--overlay-medium);
+  border-radius: 14px;
+  transition: all var(--transition-normal);
+  border: 2px solid var(--border-medium);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: var(--color-text-primary);
+    border-radius: 50%;
+    transition: all var(--transition-normal);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  &.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    
+    &::before {
+      transform: translateX(24px);
+      background: var(--color-text-inverse);
+    }
+  }
+}
+```
+
+**Themed Components:**
+
+All components now dynamically adapt to the selected theme:
+
+1. **Exercise Modal**:
+   - Title: Gradient with theme colors
+   - Instructions: Border-left with --color-primary
+   - Button: Gradient background with theme colors
+   - Container: Surface color with theme-based shadows
+
+2. **Snackbar Notifications**:
+   - Background: Gradient (--color-primary → --color-accent)
+   - Text: --color-text-inverse for perfect contrast
+   - Shadow: Colored glow using --color-accent-glow
+   - Border: --color-accent
+
+3. **Primary Buttons**:
+   - Background: Gradient with theme colors
+   - Text: Smart --color-text-inverse (black on neutral dark, white elsewhere)
+   - Hover: Brightness adjustment without color change
+
+**Color Contrast Logic:**
+
+```typescript
+// In applyTheme() method
+if (isDarkTheme) {
+  if (theme.id === 'black') {
+    // Neutral dark: Black text on light gray gradients
+    root.style.setProperty('--color-text-inverse', '#000000');
+  } else {
+    // Colored dark: White text on vibrant gradients
+    root.style.setProperty('--color-text-inverse', '#ffffff');
+  }
+} else {
+  // All light themes: White text on dark gradients
+  root.style.setProperty('--color-text-inverse', '#ffffff');
+}
+```
+
+**Impact:** 
+- Highly flexible theme system with 12 variations
+- Better user experience with independent mode/color controls
+- Perfect contrast ratios in all theme combinations
+- Consistent visual language across all components
+- Seamless transitions between themes
+
+---
+
 ## 🚀 Additional Recommended Enhancements
 
-### 5. Button Micro-Interactions
+### 6. Button Micro-Interactions
 
-Add the following to your component
-
- SCSS:
+Add the following to your component SCSS:
 
 ```scss
 /**
@@ -194,7 +328,7 @@ Add the following to your component
 
 ---
 
-### 6. Form Inputs Modernization
+### 7. Form Inputs Modernization
 
 Update the config form inputs:
 
@@ -250,7 +384,7 @@ Update the config form inputs:
 
 ---
 
-### 7. Theme Toggle Enhancement
+### 8. Theme Toggle Enhancement
 
 Modernize the theme dropdown:
 
@@ -373,7 +507,7 @@ Modernize the theme dropdown:
 
 ---
 
-### 8. Audio Toggle Enhancement
+### 9. Audio Toggle Enhancement
 
 ```scss
 /**
