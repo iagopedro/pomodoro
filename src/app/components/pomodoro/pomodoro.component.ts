@@ -4,33 +4,30 @@ import { FormsModule } from '@angular/forms';
 import { PomodoroService, TimerState } from '../../services/pomodoro.service';
 
 /**
- * Componente Pomodoro - Angular v20 com Standalone Components
+ * Componente Pomodoro - Angular v20 Standalone Component
  * 
- * Este componente é responsável apenas pela apresentação (UI).
- * A lógica de negócio fica no PomodoroService.
+ * Responsável apenas pela UI/apresentação. Lógica de negócio delegada ao PomodoroService.
  * 
- * Conceitos Angular v20 demonstrados:
- * - Standalone Components (sem módulos)
- * - inject() API (nova forma de injeção)
- * - Signals consumidos do serviço
- * - Control Flow (@if/@else)
- * - Separação clara de responsabilidades
+ * Conceitos Angular v20:
+ * - Standalone Components: Sem módulos, importa dependências diretamente
+ * - inject(): Nova API de injeção que permite melhor tree-shaking
+ * - Signals: Estado reativo consumido do serviço (computed/writable)
+ * - Control Flow: @if/@else/@for diretamente no template
  */
 @Component({
   selector: 'app-pomodoro',
-  standalone: true,
+  standalone: true, // Não precisa de NgModule - declara imports diretamente
   imports: [CommonModule, FormsModule],
   templateUrl: './pomodoro.component.html',
   styleUrl: './pomodoro.component.scss'
 })
 export class PomodoroComponent implements OnDestroy {
   
-  // Angular v20 - inject() API para injeção de dependências
-  // Substitui a injeção via constructor para melhor tree-shaking
+  // inject() - Injeção de dependências do Angular v20 (substitui constructor injection)
   private readonly pomodoroService = inject(PomodoroService);
   private readonly elementRef = inject(ElementRef);
 
-  // Signals públicos do serviço (read-only)
+  // Computed Signals - Expostos do serviço (read-only)
   public readonly config = this.pomodoroService.config;
   public readonly currentState = this.pomodoroService.currentState;
   public readonly remainingTime = this.pomodoroService.remainingTime;
@@ -53,16 +50,15 @@ export class PomodoroComponent implements OnDestroy {
   public tempBreakTime = this.config().breakTime;
   public tempLongBreakTime = this.config().longBreakTime;
 
-  // Controle de visibilidade das configurações
+  // Writable Signals - Estado local do componente
   public readonly showConfig = signal(false);
   public readonly isClosing = signal(false);
-
-  // Controle do dropdown de temas
   public readonly showThemeDropdown = signal(false);
 
   title = 'Pomodoro Timer';
 
-  // Fechar dropdown ao clicar fora
+  // @HostListener - Decorator que escuta eventos globais do documento (Angular)
+  // Fecha dropdown ao clicar fora dele
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
     const clickedInside = this.elementRef.nativeElement.contains(event.target);
@@ -72,7 +68,6 @@ export class PomodoroComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Cleanup é feito pelo serviço (singleton)
     console.log('[PomodoroComponent] Component destroyed');
   }
 
@@ -104,7 +99,6 @@ export class PomodoroComponent implements OnDestroy {
 
   public resetTimer(): void {
     this.pomodoroService.resetTimer();
-    // Resetar formulário
     this.tempWorkTime = this.config().workTime;
     this.tempBreakTime = this.config().breakTime;
     this.tempLongBreakTime = this.config().longBreakTime;

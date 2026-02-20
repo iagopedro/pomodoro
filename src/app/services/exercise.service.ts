@@ -2,21 +2,16 @@ import { Injectable, signal } from '@angular/core';
 import { Exercise } from '../models/exercise.interface';
 
 /**
- * Serviço de Exercícios - Gerencia lista de exercícios de mobilidade
+ * Serviço de Exercícios
  * 
- * Responsabilidades:
- * - Armazenar lista de 20 exercícios
- * - Selecionar exercícios aleatórios sem repetição
- * - Resetar lista quando todos forem utilizados
- * 
- * Usa Angular Signals para gerenciamento reativo do estado
+ * Gerencia lista de 20 exercícios de mobilidade com seleção aleatória sem repetição.
+ * Reseta automaticamente quando todos os exercícios forem utilizados.
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root' // Singleton global - instância compartilhada
 })
 export class ExerciseService {
   
-  // Lista completa de exercícios de mobilidade (1 minuto cada)
   private readonly allExercises: Exercise[] = [
     {
       id: 1,
@@ -140,10 +135,9 @@ export class ExerciseService {
     }
   ];
 
-  // Signal para rastrear exercícios já utilizados
+  // Writable Signal - Rastreamento de exercícios já utilizados (Angular v20)
   private _usedExerciseIds = signal<Set<number>>(new Set());
 
-  // Signal computed para exercícios disponíveis
   private _availableExercises = signal<Exercise[]>(this.allExercises);
 
   constructor() {
