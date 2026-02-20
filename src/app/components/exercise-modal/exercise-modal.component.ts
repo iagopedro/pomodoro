@@ -6,12 +6,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { Exercise } from '../../models/exercise.interface';
 
 /**
- * Componente Modal de Exercício - Angular v20
+ * Componente Modal de Exercício - Angular v20 Standalone
  * 
- * Modal que exibe um exercício de mobilidade ao final de cada sessão de trabalho.
- * O usuário deve executar o exercício e clicar em "Feito!" para fechar.
- * 
- * O timer fica parado e zerado enquanto o modal está aberto.
+ * Exibe exercício de mobilidade ao final de cada sessão.
+ * Timer fica parado até o usuário clicar em "Feito!".
  */
 @Component({
   selector: 'app-exercise-modal',
@@ -26,13 +24,12 @@ import { Exercise } from '../../models/exercise.interface';
   styleUrl: './exercise-modal.component.scss'
 })
 export class ExerciseModalComponent {
-  // Angular v20 - inject() API
+  // inject() API - Nova forma de injeção de dependências do Angular v20
   public readonly dialogRef = inject(MatDialogRef<ExerciseModalComponent>);
+  
+  // MAT_DIALOG_DATA - Token de injeção do Angular Material para dados do dialog
   public readonly exercise: Exercise = inject(MAT_DIALOG_DATA);
 
-  /**
-   * Fecha o modal quando o usuário clica em "Feito!"
-   */
   public onDone(): void {
     this.dialogRef.close();
   }

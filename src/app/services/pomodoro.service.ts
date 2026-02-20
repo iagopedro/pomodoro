@@ -37,49 +37,41 @@ export interface PomodoroTheme {
 /**
  * Serviço Pomodoro - Angular v20 com Signals
  * 
- * Este serviço centraliza toda a lógica de negócio do Pomodoro Timer
- * usando Angular Signals para gerenciamento de estado reativo.
- * 
- * Responsabilidades:
- * - Gerenciar estado global do timer
- * - Controlar transições de sessões
- * - Notificações de áudio
- * - Validação de configurações
+ * Centraliza toda a lógica de negócio usando Signals para gerenciamento reativo.
+ * Responsabilidades: estado do timer, transições de sessões, notificações e validações.
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root' // Singleton global - instância única compartilhada por toda a aplicação
 })
 export class PomodoroService {
   
-  // Configuração padrão do Pomodoro
   private readonly defaultConfig: PomodoroConfig = {
-    workTime: 25,        // 25 minutos de trabalho
-    breakTime: 5,        // 5 minutos de pausa
-    longBreakTime: 15,   // 15 minutos de pausa longa
-    workSessions: 4      // 4 sessões antes da pausa longa
+    workTime: 25,
+    breakTime: 5,
+    longBreakTime: 15,
+    workSessions: 4
   };
 
-  // Temas disponíveis
   private readonly availableThemes: PomodoroTheme[] = [
     {
       id: 'black',
       name: 'Preto',
       icon: '⚫',
-      primary: '#e8e8e8',    // Cinza platinum (moderno, alto contraste)
-      accent: '#a0a0a0',     // Cinza prata (contraste intermediário)
-      background: '#0a0a0a', // Preto profundo (moderno, reduz fadiga)
-      surface: '#151515',    // Cinza ônix (sutil diferenciação)
-      text: '#e8e8e8'        // Cinza platinum (contraste 18.2:1 com background)
+      primary: '#e8e8e8',
+      accent: '#a0a0a0',
+      background: '#0a0a0a',
+      surface: '#151515',
+      text: '#e8e8e8'
     },
     {
       id: 'white',
       name: 'Branco',
       icon: '⚪',
-      primary: '#1a1a1a',    // Cinza carbono (moderno, alto contraste)
-      accent: '#4a4a4a',     // Cinza grafite (contraste intermediário)
-      background: '#fafafa', // Off-white suave (reduz fadiga visual)
-      surface: '#f0f0f0',    // Cinza pearl (sutil diferenciação)
-      text: '#1a1a1a'        // Cinza carbono (contraste 17.9:1 com background)
+      primary: '#1a1a1a',
+      accent: '#4a4a4a',
+      background: '#fafafa',
+      surface: '#f0f0f0',
+      text: '#1a1a1a'
     },
     {
       id: 'red',
@@ -134,54 +126,54 @@ export class PomodoroService {
       id: 'red-light',
       name: 'Vermelho Claro',
       icon: '🔴',
-      primary: '#b71c1c',    // Vermelho escuro (melhor contraste em fundo claro)
-      accent: '#d32f2f',     // Vermelho médio
-      background: '#fafafa', // Off-white suave
-      surface: '#f0f0f0',    // Cinza pearl
-      text: '#1a1a1a'        // Texto escuro
+      primary: '#b71c1c',
+      accent: '#d32f2f',
+      background: '#fafafa',
+      surface: '#f0f0f0',
+      text: '#1a1a1a'
     },
     {
       id: 'blue-light',
       name: 'Azul Claro',
       icon: '🔵',
-      primary: '#0d47a1',    // Azul escuro (melhor contraste em fundo claro)
-      accent: '#1976d2',     // Azul médio
-      background: '#fafafa', // Off-white suave
-      surface: '#f0f0f0',    // Cinza pearl
-      text: '#1a1a1a'        // Texto escuro
+      primary: '#0d47a1',
+      accent: '#1976d2',
+      background: '#fafafa',
+      surface: '#f0f0f0',
+      text: '#1a1a1a'
     },
     {
       id: 'green-light',
       name: 'Verde Claro',
       icon: '🟢',
-      primary: '#1b5e20',    // Verde escuro (melhor contraste em fundo claro)
-      accent: '#388e3c',     // Verde médio
-      background: '#fafafa', // Off-white suave
-      surface: '#f0f0f0',    // Cinza pearl
-      text: '#1a1a1a'        // Texto escuro
+      primary: '#1b5e20',
+      accent: '#388e3c',
+      background: '#fafafa',
+      surface: '#f0f0f0',
+      text: '#1a1a1a'
     },
     {
       id: 'yellow-light',
       name: 'Amarelo Claro',
       icon: '🟡',
-      primary: '#e65100',    // Laranja escuro (melhor contraste em fundo claro)
-      accent: '#f57c00',     // Laranja médio
-      background: '#fafafa', // Off-white suave
-      surface: '#f0f0f0',    // Cinza pearl
-      text: '#1a1a1a'        // Texto escuro
+      primary: '#e65100',
+      accent: '#f57c00',
+      background: '#fafafa',
+      surface: '#f0f0f0',
+      text: '#1a1a1a'
     },
     {
       id: 'purple-light',
       name: 'Roxo Claro',
       icon: '🟪',
-      primary: '#4a148c',    // Roxo escuro (melhor contraste em fundo claro)
-      accent: '#7b1fa2',     // Roxo médio
-      background: '#fafafa', // Off-white suave
-      surface: '#f0f0f0',    // Cinza pearl
-      text: '#1a1a1a'        // Texto escuro
+      primary: '#4a148c',
+      accent: '#7b1fa2',
+      background: '#fafafa',
+      surface: '#f0f0f0',
+      text: '#1a1a1a'
     },  ];
 
-  // Signals privados para controle interno do estado
+  // Writable Signals - Estado mutável interno (Angular v20)
   private _config = signal<PomodoroConfig>(this.defaultConfig);
   private _currentState = signal<TimerState>(TimerState.IDLE);
   private _remainingTime = signal<number>(this._config().workTime * 60);
@@ -190,11 +182,11 @@ export class PomodoroService {
   private _isRunning = signal<boolean>(false);
   private _audioEnabled = signal<boolean>(false);
   private _notificationsEnabled = signal<boolean>(false);
-  private _isDarkMode = signal<boolean>(true); // Dark mode ativado por padrão
-  private _baseColor = signal<BaseColor>('default'); // Cor base padrão
-  private _currentTheme = signal<PomodoroTheme>(this.availableThemes[0]); // Tema padrão: Preto
+  private _isDarkMode = signal<boolean>(true);
+  private _baseColor = signal<BaseColor>('default');
+  private _currentTheme = signal<PomodoroTheme>(this.availableThemes[0]);
 
-  // Computed signals públicos - API read-only para componentes
+  // Computed Signals - API read-only derivada para componentes (Angular v20)
   public readonly config = computed(() => this._config());
   public readonly currentState = computed(() => this._currentState());
   public readonly remainingTime = computed(() => this._remainingTime());
@@ -208,7 +200,7 @@ export class PomodoroService {
   public readonly currentTheme = computed(() => this._currentTheme());
   public readonly themes = computed(() => this.availableThemes);
   
-  // Cores base disponíveis para seleção
+  // Computed Signal - Ícone dinâmico para tema padrão (⚫/⚪ baseado no modo)
   public readonly baseColors = computed<Array<{id: BaseColor, name: string, icon: string}>>(() => [
     { id: 'default', name: 'Padrão', icon: this._isDarkMode() ? '⚫' : '⚪' },
     { id: 'red', name: 'Vermelho', icon: '🔴' },
@@ -218,7 +210,6 @@ export class PomodoroService {
     { id: 'purple', name: 'Roxo', icon: '🟣' },
   ]);
   
-  // Computed para formatar tempo em MM:SS
   public readonly formattedTime = computed(() => {
     const time = this._remainingTime();
     const minutes = Math.floor(time / 60);
@@ -226,47 +217,42 @@ export class PomodoroService {
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   });
 
-  // Computed para calcular progresso (0-100%)
   public readonly progress = computed(() => {
     const current = this._remainingTime();
     const total = this.getTotalTimeForCurrentState();
     return total > 0 ? ((total - current) / total) * 100 : 0;
   });
 
-  // Timer interval privado
+  // Timer - Usa timestamps para precisão mesmo com tab inativa
   private timerInterval: any = null;
-  
-  // Timestamp para cálculo preciso (evita problemas com tab inativa)
   private startTime: number = 0;
   private pausedTime: number = 0;
   
-  // Áudios temáticos do Pomodoro
   private audio: HTMLAudioElement | null = null;
-  private readonly audioFight = 'assets/sounds/mortal-kombat-fight.mp3';  // Início (Mortal Kombat)
-  private readonly audioWin = 'assets/sounds/street-fighter-you-win.mp3'; // Final (Street Fighter)
+  private readonly audioFight = 'assets/sounds/mortal-kombat-fight.mp3';
+  private readonly audioWin = 'assets/sounds/street-fighter-you-win.mp3';
 
-  // Angular v20 - inject() API para serviços
+  // inject() API - Nova forma de injeção de dependências do Angular v20
+  // Substitui constructor injection, permitindo melhor tree-shaking
   private readonly dialog = inject(MatDialog);
   private readonly exerciseService = inject(ExerciseService);
   private readonly snackBar = inject(MatSnackBar);
   
-  // Título original da aba para restaurar
   private originalTitle: string = document.title;
   private titleBlinkInterval: any = null;
 
   constructor() {
-    // Carregar preferências salvas do localStorage
     this.loadSavedTheme();
     
-    // Effect - Monitora mudanças de estado para logs
+    // effect() - Angular Signal que reage automaticamente a mudanças (Angular v20)
+    // Similar ao useEffect do React, mas com rastreamento automático de dependências
     effect(() => {
       const state = this._currentState();
       const time = this._remainingTime();
-      
       console.log(`[PomodoroService] Estado: ${state}, Tempo: ${time}s`);
     });
     
-    // Effect - Aplica tema quando dark mode ou cor base muda
+    // Effect reativo - Computa tema quando dark mode ou cor base muda
     effect(() => {
       const isDark = this._isDarkMode();
       const baseColor = this._baseColor();
@@ -274,15 +260,13 @@ export class PomodoroService {
       this._currentTheme.set(theme);
     });
     
-    // Effect - Aplica tema nas CSS variables quando muda
+    // Effect reativo - Aplica CSS variables quando tema muda
     effect(() => {
       const theme = this._currentTheme();
       this.applyTheme(theme);
     });
   }
 
-  // API pública do serviço - Métodos que componentes podem chamar
-  
   public updateConfig(config: Partial<PomodoroConfig>): void {
     // Validação de entrada
     if (config.workTime && (config.workTime < 1 || config.workTime > 120)) {
@@ -298,14 +282,11 @@ export class PomodoroService {
 
   public async startTimer(): Promise<void> {
     if (this._currentState() === TimerState.IDLE) {
-      // Primeira execução - solicitar permissão de notificação
-      // ⚠️ IMPORTANTE: Aguardar permissão antes de iniciar sessão
       await this.requestNotificationPermission();
       
       this.startWorkSession();
       this.playFightSound();
     } else {
-      // Retomar de onde parou
       this.startTime = Date.now();
       this.pausedTime = this._remainingTime();
       this._isRunning.set(true);
