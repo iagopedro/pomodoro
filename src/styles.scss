@@ -182,33 +182,60 @@ h1, h2, h3, h4, h5, h6 {
 /* Estilos globais para o modal de exercícios */
 .exercise-modal-panel {
   .mat-mdc-dialog-container {
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 0;
+    // Background do modal usa cor de surface do tema
+    background: var(--color-surface);
+    // Borda sutil
+    border: 1px solid var(--border-medium);
+    // Sombra dramática com glow do tema
+    box-shadow: var(--shadow-xl), 0 0 40px var(--color-accent-glow);
+    // Glassmorphism para modernidade
+    backdrop-filter: blur(20px);
   }
 }
 
 /* Estilos para notificações in-app (Snackbar) */
 .pomodoro-snackbar {
-  // Snackbar maior e mais visível
+  // Snackbar maior e mais visível - usa variáveis CSS do tema
   .mdc-snackbar__surface {
-    background-color: var(--mat-sys-primary) !important;
-    color: var(--mat-sys-on-primary) !important;
+    // Gradiente dinâmico usando as cores do tema atual
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%) !important;
+    color: var(--color-text-inverse) !important;
     min-width: 400px;
     font-size: 16px;
     font-weight: 500;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-    border-radius: 8px;
+    
+    // Sombra colorida baseada no tema
+    box-shadow: 
+      0 8px 16px rgba(0, 0, 0, 0.4),
+      0 0 24px var(--color-accent-glow) !important;
+    
+    border-radius: 12px;
+    border: 1px solid var(--color-accent);
+    
+    // Glassmorphism sutil
+    backdrop-filter: blur(8px);
   }
 
   .mdc-snackbar__label {
     font-size: 16px;
     font-weight: 500;
     padding: 8px 0;
+    color: var(--color-text-inverse) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 
   .mat-mdc-snack-bar-action {
-    color: var(--mat-sys-on-primary) !important;
+    color: var(--color-text-inverse) !important;
     font-weight: bold;
+    opacity: 0.9;
+    
+    &:hover {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
   }
 
   // Animação de destaque

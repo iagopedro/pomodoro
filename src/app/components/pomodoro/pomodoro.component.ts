@@ -40,8 +40,10 @@ export class PomodoroComponent implements OnDestroy {
   public readonly formattedTime = this.pomodoroService.formattedTime;
   public readonly progress = this.pomodoroService.progress;
   public readonly audioEnabled = this.pomodoroService.audioEnabled;
+  public readonly isDarkMode = this.pomodoroService.isDarkMode;
+  public readonly baseColor = this.pomodoroService.baseColor;
   public readonly currentTheme = this.pomodoroService.currentTheme;
-  public readonly themes = this.pomodoroService.themes;
+  public readonly baseColors = this.pomodoroService.baseColors;
 
   // Enum para template
   public readonly TimerState = TimerState;
@@ -139,8 +141,12 @@ export class PomodoroComponent implements OnDestroy {
     this.showThemeDropdown.update(value => !value);
   }
 
-  public selectTheme(themeId: string): void {
-    this.pomodoroService.setTheme(themeId as any);
+  public selectBaseColor(colorId: string): void {
+    this.pomodoroService.setBaseColor(colorId as any);
     this.showThemeDropdown.set(false);
+  }
+
+  public toggleDarkMode(): void {
+    this.pomodoroService.toggleDarkMode();
   }
 }

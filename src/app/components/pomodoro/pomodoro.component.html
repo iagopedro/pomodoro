@@ -11,25 +11,28 @@
       <button 
         class="btn-theme-toggle" 
         (click)="toggleThemeDropdown()" 
-        [title]="'Tema: ' + currentTheme().name"
+        [title]="'Cor: ' + baseColor()"
       >
-        <span class="theme-icon">{{ currentTheme().icon }}</span>
+        <svg class="theme-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="9" [attr.fill]="currentTheme().background" [attr.stroke]="currentTheme().primary" stroke-width="2" />
+        </svg>
       </button>
       
-      <!-- Dropdown de temas -->
+      <!-- Dropdown de cores -->
       @if (showThemeDropdown()) {
         <div class="theme-dropdown">
-          @for (theme of themes(); track theme.id) {
+          @for (color of baseColors(); track color.id) {
             <button 
               class="theme-option"
-              [class.active]="theme.id === currentTheme().id"
-              (click)="selectTheme(theme.id)"
-              [style.--theme-preview]="theme.primary"
+              [class.active]="color.id === baseColor()"
+              (click)="selectBaseColor(color.id)"
             >
-              <span class="theme-option-icon">{{ theme.icon }}</span>
-              <span class="theme-option-name">{{ theme.name }}</span>
-              @if (theme.id === currentTheme().id) {
-                <span class="theme-option-check">✓</span>
+              <span class="theme-option-icon">{{ color.icon }}</span>
+              <span class="theme-option-name">{{ color.name }}</span>
+              @if (color.id === baseColor()) {
+                <svg class="theme-option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
               }
             </button>
           }
@@ -44,9 +47,17 @@
         [title]="audioEnabled() ? 'Desativar som' : 'Ativar som'"
       >
         @if (audioEnabled()) {
-          🔊
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
         } @else {
-          🔇
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
         }
       </button>
       
@@ -65,25 +76,44 @@
       
       <div class="bottom-section">
         <div class="session-info">
-          <span class="chip">Sessão {{ currentSession() }}</span>
-          <span class="chip accent">{{ totalSessions() }} completas</span>
+          <span class="chip accent">Sessão {{ currentSession() }}</span>
+          <span class="chip">{{ totalSessions() }} completas</span>
         </div>
         
         <div class="control-buttons">
           <!-- Usando @if - novo control flow do Angular v20 -->
           @if (isRunning()) {
-            <button class="btn-fab warn" (click)="pauseTimer()">⏸️</button>
+            <button class="btn-fab warn" (click)="pauseTimer()" title="Pausar">
+              <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="4" width="4" height="16" rx="1"></rect>
+                <rect x="14" y="4" width="4" height="16" rx="1"></rect>
+              </svg>
+            </button>
           } @else {
-            <button class="btn-fab primary" (click)="startTimer()">▶️</button>
+            <button class="btn-fab primary" (click)="startTimer()" title="Iniciar">
+              <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5 L8 19 L19 12 Z"></path>
+              </svg>
+            </button>
           }
           
-          <button class="btn" (click)="resetTimer()">🔄</button>
+          <button class="btn" (click)="resetTimer()" title="Reiniciar">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+            </svg>
+          </button>
           
           @if (isRunning()) {
-            <button class="btn skip-btn" (click)="skipSession()">⏭️</button>
+            <button class="btn skip-btn" (click)="skipSession()" title="Pular sessão">
+              <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7 5 L7 19 L17 12 Z"></path>
+                <rect x="17" y="5" width="2" height="14" rx="1"></rect>
+              </svg>
+            </button>
           }
           
-          <button class="btn" (click)="toggleConfig()" [disabled]="showConfig()">
+          <button class="btn" (click)="toggleConfig()" [disabled]="showConfig()" title="Configurações">
             ⚙️
           </button>
         </div>
@@ -93,7 +123,12 @@
     <!-- Configurações -->
     @if (showConfig()) {
       <div class="config-card" [class.closing]="isClosing()">
-        <button class="btn-close" (click)="toggleConfig()" title="Fechar configurações">✕</button>
+        <button class="btn-close" (click)="toggleConfig()" title="Fechar configurações">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
         
         <div class="config-grid">
           <div class="form-field">
@@ -112,8 +147,42 @@
           </div>
         </div>
         
+        <!-- Toggle de Dark Mode -->
+        <div class="dark-mode-toggle">
+          <label class="toggle-label">
+            <span class="toggle-text">
+              @if (isDarkMode()) {
+                <svg class="icon-inline" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                Modo Escuro
+              } @else {
+                <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                Modo Claro
+              }
+            </span>
+            <input type="checkbox" [checked]="isDarkMode()" (change)="toggleDarkMode()" hidden>
+            <span class="toggle-switch" [class.active]="isDarkMode()"></span>
+          </label>
+        </div>
+        
         <button class="btn primary" (click)="updateConfig()" [disabled]="isRunning()">
-          💾 Salvar Configurações
+          <svg class="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+            <polyline points="7 3 7 8 15 8"></polyline>
+          </svg>
+          Salvar
         </button>
       </div>
     }
