@@ -7,6 +7,35 @@
   <div class="cards-row" [class.config-visible]="showConfig()">
     <!-- Timer Principal -->
     <div class="timer-card">
+      <!-- Botão de tema no canto superior esquerdo -->
+      <button 
+        class="btn-theme-toggle" 
+        (click)="toggleThemeDropdown()" 
+        [title]="'Tema: ' + currentTheme().name"
+      >
+        <span class="theme-icon">{{ currentTheme().icon }}</span>
+      </button>
+      
+      <!-- Dropdown de temas -->
+      @if (showThemeDropdown()) {
+        <div class="theme-dropdown">
+          @for (theme of themes(); track theme.id) {
+            <button 
+              class="theme-option"
+              [class.active]="theme.id === currentTheme().id"
+              (click)="selectTheme(theme.id)"
+              [style.--theme-preview]="theme.primary"
+            >
+              <span class="theme-option-icon">{{ theme.icon }}</span>
+              <span class="theme-option-name">{{ theme.name }}</span>
+              @if (theme.id === currentTheme().id) {
+                <span class="theme-option-check">✓</span>
+              }
+            </button>
+          }
+        </div>
+      }
+      
       <!-- Botão de áudio no canto superior direito -->
       <button 
         class="btn-audio-toggle" 

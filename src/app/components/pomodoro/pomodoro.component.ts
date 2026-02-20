@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, signal } from '@angular/core';
+import { Component, inject, OnDestroy, signal, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PomodoroService, TimerState } from '../../services/pomodoro.service';
@@ -28,6 +28,7 @@ export class PomodoroComponent implements OnDestroy {
   // Angular v20 - inject() API para injeção de dependências
   // Substitui a injeção via constructor para melhor tree-shaking
   private readonly pomodoroService = inject(PomodoroService);
+  private readonly elementRef = inject(ElementRef);
 
   // Signals públicos do serviço (read-only)
   public readonly config = this.pomodoroService.config;
@@ -39,6 +40,8 @@ export class PomodoroComponent implements OnDestroy {
   public readonly formattedTime = this.pomodoroService.formattedTime;
   public readonly progress = this.pomodoroService.progress;
   public readonly audioEnabled = this.pomodoroService.audioEnabled;
+  public readonly currentTheme = this.pomodoroService.currentTheme;
+  public readonly themes = this.pomodoroService.themes;
 
   // Enum para template
   public readonly TimerState = TimerState;
@@ -52,7 +55,19 @@ export class PomodoroComponent implements OnDestroy {
   public readonly showConfig = signal(false);
   public readonly isClosing = signal(false);
 
+  // Controle do dropdown de temas
+  public readonly showThemeDropdown = signal(false);
+
   title = 'Pomodoro Timer';
+
+  // Fechar dropdown ao clicar fora
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const clickedInside = this.elementRef.nativeElement.contains(event.target);
+    if (!clickedInside && this.showThemeDropdown()) {
+      this.showThemeDropdown.set(false);
+    }
+  }
 
   ngOnDestroy(): void {
     // Cleanup é feito pelo serviço (singleton)
@@ -118,5 +133,14 @@ export class PomodoroComponent implements OnDestroy {
 
   public async toggleAudio(): Promise<void> {
     await this.pomodoroService.toggleAudio();
+  }
+
+  public toggleThemeDropdown(): void {
+    this.showThemeDropdown.update(value => !value);
+  }
+
+  public selectTheme(themeId: string): void {
+    this.pomodoroService.setTheme(themeId as any);
+    this.showThemeDropdown.set(false);
   }
 }

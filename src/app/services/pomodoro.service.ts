@@ -20,6 +20,19 @@ export interface PomodoroConfig {
   workSessions: number;
 }
 
+export type ThemeColor = 'red' | 'blue' | 'green' | 'yellow' | 'purple' | 'black' | 'white';
+
+export interface PomodoroTheme {
+  id: ThemeColor;
+  name: string;
+  icon: string;
+  primary: string;
+  accent: string;
+  background: string;
+  surface: string;
+  text: string;
+}
+
 /**
  * Serviço Pomodoro - Angular v20 com Signals
  * 
@@ -45,6 +58,80 @@ export class PomodoroService {
     workSessions: 4      // 4 sessões antes da pausa longa
   };
 
+  // Temas disponíveis
+  private readonly availableThemes: PomodoroTheme[] = [
+    {
+      id: 'red',
+      name: 'Vermelho',
+      icon: '🔴',
+      primary: '#d32f2f',
+      accent: '#ff5252',
+      background: '#1a1a1a',
+      surface: '#2a2a2a',
+      text: '#ffffff'
+    },
+    {
+      id: 'blue',
+      name: 'Azul',
+      icon: '🔵',
+      primary: '#1976d2',
+      accent: '#42a5f5',
+      background: '#1a1a1a',
+      surface: '#2a2a2a',
+      text: '#ffffff'
+    },
+    {
+      id: 'green',
+      name: 'Verde',
+      icon: '🟢',
+      primary: '#388e3c',
+      accent: '#66bb6a',
+      background: '#1a1a1a',
+      surface: '#2a2a2a',
+      text: '#ffffff'
+    },
+    {
+      id: 'yellow',
+      name: 'Amarelo',
+      icon: '🟡',
+      primary: '#f57c00',
+      accent: '#ffb74d',
+      background: '#1a1a1a',
+      surface: '#2a2a2a',
+      text: '#ffffff'
+    },
+    {
+      id: 'purple',
+      name: 'Roxo',
+      icon: '🟣',
+      primary: '#7b1fa2',
+      accent: '#ba68c8',
+      background: '#1a1a1a',
+      surface: '#2a2a2a',
+      text: '#ffffff'
+    },
+    {
+      id: 'black',
+      name: 'Preto',
+      icon: '⚫',
+      primary: '#000000',
+      accent: '#424242',
+      background: '#ffffff',
+      surface: '#f5f5f5',
+      text: '#000000'
+    },
+    {
+      id: 'white',
+      name: 'Branco',
+      icon: '⚪',
+      primary: '#ffffff',
+      accent: '#e0e0e0',
+      background: '#000000',
+      surface: '#1a1a1a',
+      text: '#ffffff'
+    }
+  ];
+
   // Signals privados para controle interno do estado
   private _config = signal<PomodoroConfig>(this.defaultConfig);
   private _currentState = signal<TimerState>(TimerState.IDLE);
@@ -54,6 +141,7 @@ export class PomodoroService {
   private _isRunning = signal<boolean>(false);
   private _audioEnabled = signal<boolean>(false);
   private _notificationsEnabled = signal<boolean>(false);
+  private _currentTheme = signal<PomodoroTheme>(this.availableThemes[0]); // Red default
 
   // Computed signals públicos - API read-only para componentes
   public readonly config = computed(() => this._config());
@@ -64,6 +152,8 @@ export class PomodoroService {
   public readonly isRunning = computed(() => this._isRunning());
   public readonly audioEnabled = computed(() => this._audioEnabled());
   public readonly notificationsEnabled = computed(() => this._notificationsEnabled());
+  public readonly currentTheme = computed(() => this._currentTheme());
+  public readonly themes = computed(() => this.availableThemes);
   
   // Computed para formatar tempo em MM:SS
   public readonly formattedTime = computed(() => {
@@ -102,12 +192,21 @@ export class PomodoroService {
   private titleBlinkInterval: any = null;
 
   constructor() {
+    // Carregar tema salvo do localStorage
+    this.loadSavedTheme();
+    
     // Effect - Monitora mudanças de estado para logs
     effect(() => {
       const state = this._currentState();
       const time = this._remainingTime();
       
       console.log(`[PomodoroService] Estado: ${state}, Tempo: ${time}s`);
+    });
+    
+    // Effect - Aplica tema nas CSS variables quando muda
+    effect(() => {
+      const theme = this._currentTheme();
+      this.applyTheme(theme);
     });
   }
 
@@ -238,6 +337,75 @@ export class PomodoroService {
       // Desativando áudio
       this._audioEnabled.set(false);
       console.log('[PomodoroService] 🔇 Áudio desabilitado');
+    }
+  }
+
+  /**
+   * Troca o tema atual
+   * 
+   * @param themeId - ID do tema a ser aplicado
+   */
+  public setTheme(themeId: ThemeColor): void {
+    const theme = this.availableThemes.find(t => t.id === themeId);
+    
+    if (!theme) {
+      console.error(`[PomodoroService] ❌ Tema não encontrado: ${themeId}`);
+      return;
+    }
+    
+    console.log(`[PomodoroService] 🎨 Aplicando tema: ${theme.name}`);
+    this._currentTheme.set(theme);
+    this.saveTheme(theme.id);
+  }
+
+  /**
+   * Aplica o tema nas CSS variables do documento
+   * 
+   * @param theme - Tema a ser aplicado
+   */
+  private applyTheme(theme: PomodoroTheme): void {
+    const root = document.documentElement;
+    
+    root.style.setProperty('--color-primary', theme.primary);
+    root.style.setProperty('--color-accent', theme.accent);
+    root.style.setProperty('--color-background', theme.background);
+    root.style.setProperty('--color-surface', theme.surface);
+    root.style.setProperty('--color-text', theme.text);
+    
+    console.log(`[PomodoroService] ✅ Tema aplicado: ${theme.name}`);
+  }
+
+  /**
+   * Salva o tema no localStorage
+   * 
+   * @param themeId - ID do tema a ser salvo
+   */
+  private saveTheme(themeId: ThemeColor): void {
+    try {
+      localStorage.setItem('pomodoro-theme', themeId);
+      console.log(`[PomodoroService] 💾 Tema salvo: ${themeId}`);
+    } catch (error) {
+      console.error('[PomodoroService] Erro ao salvar tema:', error);
+    }
+  }
+
+  /**
+   * Carrega o tema salvo do localStorage
+   */
+  private loadSavedTheme(): void {
+    try {
+      const savedThemeId = localStorage.getItem('pomodoro-theme') as ThemeColor | null;
+      
+      if (savedThemeId) {
+        const theme = this.availableThemes.find(t => t.id === savedThemeId);
+        
+        if (theme) {
+          this._currentTheme.set(theme);
+          console.log(`[PomodoroService] 📂 Tema carregado: ${theme.name}`);
+        }
+      }
+    } catch (error) {
+      console.error('[PomodoroService] Erro ao carregar tema:', error);
     }
   }
 
@@ -520,7 +688,8 @@ export class PomodoroService {
     // 📢 Notificação: Sessão de trabalho iniciada
     this.sendNotification(
       '💼 Sessão de Trabalho Iniciada!',
-      `Foque por ${this._config().workTime} ${this._config().workTime === 1 ? 'minuto' : 'minutos'}. Você consegue! 🎯`
+      `Foque por ${this._config().workTime} ${this._config().workTime === 1 ? 'minuto' : 'minutos'}
+      . Você consegue! 🎯`
     );
   }
 

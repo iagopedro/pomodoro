@@ -700,6 +700,193 @@ h2, h3 {
 }
 
 /**
+ * Botão Toggle de Tema
+ * 
+ * Estratégia SCSS:
+ * 1. Position Absolute: Posicionado no canto superior esquerdo do .timer-card
+ * 2. Espelha o botão de áudio (que está à direita)
+ * 3. Mostra a cor atual do tema com um ícone
+ * 4. Abre dropdown com opções de cores ao clicar
+ */
+.btn-theme-toggle {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--mat-sys-outline);
+  background: var(--mat-sys-surface-variant);
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 10;
+  line-height: 1;
+  padding: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  
+  .theme-icon {
+    font-size: 1.5rem;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+  }
+  
+  &:hover {
+    background: var(--mat-sys-secondary-container);
+    border-color: var(--mat-sys-secondary);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+  
+  // Responsividade
+  @media (max-width: 768px) {
+    width: 42px;
+    height: 42px;
+    top: 16px;
+    left: 16px;
+    
+    .theme-icon {
+      font-size: 1.3rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    width: 38px;
+    height: 38px;
+    top: 12px;
+    left: 12px;
+    
+    .theme-icon {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+/**
+ * Dropdown de Temas
+ * 
+ * Estratégia:
+ * 1. Position Absolute: Posicionado abaixo do botão de tema
+ * 2. Lista de opções de cores disponíveis
+ * 3. Animação suave de entrada/saída
+ * 4. Mostra preview da cor e nome
+ */
+.theme-dropdown {
+  position: absolute;
+  top: 76px;
+  left: 20px;
+  background: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  z-index: 100;
+  min-width: 180px;
+  max-width: 220px;
+  overflow: hidden;
+  animation: fadeInDown 0.2s ease;
+  
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  // Responsividade
+  @media (max-width: 768px) {
+    top: 68px;
+    left: 16px;
+    min-width: 160px;
+  }
+  
+  @media (max-width: 480px) {
+    top: 60px;
+    left: 12px;
+    min-width: 140px;
+  }
+}
+
+.theme-option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  color: var(--mat-sys-on-surface);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  position: relative;
+  
+  .theme-option-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+  }
+  
+  .theme-option-name {
+    flex: 1;
+    text-align: left;
+    font-weight: 400;
+  }
+  
+  .theme-option-check {
+    color: var(--mat-sys-primary);
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+  
+  &:hover {
+    background: var(--mat-sys-secondary-container);
+  }
+  
+  &.active {
+    background: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
+    font-weight: 500;
+  }
+  
+  // Borda entre opções
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
+  }
+  
+  // Responsividade
+  @media (max-width: 768px) {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    gap: 10px;
+    
+    .theme-option-icon {
+      font-size: 1.2rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    gap: 8px;
+    
+    .theme-option-icon {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+/**
  * Botão Toggle de Áudio
  * 
  * Estratégia SCSS:
